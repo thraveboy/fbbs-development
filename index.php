@@ -4,7 +4,6 @@
 <style>
 body, input {
     font-family: monospace;
-    font-size: xx-large;
     background-color: black;
     color: green;
 }
@@ -30,19 +29,19 @@ input {
 ?>
 
 <p>
-****************************************
+************************************************
 <br>
-** fury bulletin board system (fbbs) ***
+****** fury bulletin board system (fbbs) *******
 <br>
-****************************************
+************************************************
 <br>
-** https://github.com/thraveboy/fbbs ***
+** https://github.com/thraveboy/fbbs-release ***
 <br>
-****************************************
+************************************************
 <br>
-******** run on a raspberry pi *********
+************ run on a raspberry pi *************
 <br>
-****************************************
+************************************************
 <br>
 <FORM NAME="form1" METHOD="POST" ACTION="fbbs-login-submit.php">
 username:

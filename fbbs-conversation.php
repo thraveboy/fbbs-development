@@ -369,7 +369,6 @@ function showDash(str_full) {
   xhttp_dashinfo = new XMLHttpRequest();
   xhttp_dashinfo.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("board_info").innerHTML = "";
       var current_time = (new Date()).getTime();
       try {
         var jsonresponseparsed = JSON.parse(this.responseText);
@@ -379,6 +378,7 @@ function showDash(str_full) {
       if (jsonresponseparsed == undefined ||
           jsonresponseparsed.value == undefined) return;
       var jsonresponseobj = jsonresponseparsed.value[0];
+      document.getElementById("board_info").innerHTML = "";
       Object.keys(jsonresponseobj).forEach(function(key,index) {
         var array_obj = jsonresponseobj[key];
         var entry_obj = new Object();

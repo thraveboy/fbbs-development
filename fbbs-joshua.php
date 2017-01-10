@@ -73,20 +73,18 @@ canvas {
 
   $lastauth = last_auth_user();
 ?>
-|\\:::::::::::::::::::::::::::::::::::|\
-<br>
-||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
-<?=$username?>
-<br>
-<u>|||...................................|//\</u>
-<br>
---==>(last online:
+|\\:::::::::::::::::::::::::::::::::::|\--==>(last online:
 <b>[<span id="last_active"><?=$lastauth?></span>]</b>):
 <span id="back_to_main">
   <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
     <INPUT TYPE="Submit"  Value="<<--back to main">
   </form>
 </span>
+<br>
+||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
+<?=$username?>
+<br>
+<u>|||...................................|//\</u>
 <br>
 |||||||||||||||||
 <br>
@@ -534,6 +532,15 @@ else {
 }
 
 var dashUpdater = setInterval(updateDash, 5000);
+
+</script>
+
+<script>
+if ('speechSynthesis' in window) {
+  var sayHello = new SpeechSynthesisUtterance('hello comrade');
+  sayHello.lang = 'ru-RU';
+  window.speechSynthesis.speak(sayHello);
+}
 
 </script>
 

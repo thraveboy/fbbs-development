@@ -21,6 +21,17 @@ input {
     color: green;
 }
 
+input:focus {
+    border-color: white;
+    outline-color: white;
+    color: yellow;
+}
+
+input[type=submit]:focus {
+    border-color: white;
+    outline-color: white;
+}
+
 input[type=submit] {
     outline-color: lime;
     background-color: black;
@@ -78,7 +89,7 @@ canvas {
 ||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
 <?=$username?>
 <br>
-<u>|||...................................|//\</u>
+<u>|||</u>...................................|//\
 <br>
 --==>(last online:
 <b>[<span id="last_active"><?=$lastauth?></span>]</b>):

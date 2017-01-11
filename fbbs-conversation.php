@@ -229,7 +229,52 @@ function getValueColor(str) {
 }
 
 var globalCharInstance = null;
- 
+
+function showBoardInfo(str_full) {
+  var xhttp;
+  var str_trim = str_full.trim();
+  var str = str_trim.split(" ")[0];
+  if (str.length == 0) {
+    return;
+  }
+
+  var xhttp_dashinfo;
+  xhttp_dashinfo = new XMLHttpRequest();
+  xhttp_dashinfo.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var current_time = (new Date()).getTime();
+      try {
+        var jsonresponseparsed = JSON.parse(this.responseText);
+      } catch(err) {
+        return;
+      }
+      if (jsonresponseparsed == undefined ||
+          jsonresponseparsed.value == undefined) return;
+      var jsonresponseobj = jsonresponseparsed.value[0];
+      document.getElementById("board_info").innerHTML = "";
+      Object.keys(jsonresponseobj).forEach(function(key,index) {
+        var array_obj = jsonresponseobj[key];
+        var entry_obj = new Object();
+        for (var i=0; i < array_obj.length; i++) {
+          var keyval_obj = array_obj[i];
+          Object.keys(keyval_obj).forEach(function(key,index) {
+            Object.keys(keyval_obj).forEach(function(id,idx) {
+                entry_obj[id] = keyval_obj[id];
+              });
+          });
+        }
+        var entry_output = msgValue(entry_obj);
+        document.getElementById("board_info").innerHTML += entry_output + "<br>";
+      });
+    }
+  }
+
+  xhttp_dashinfo.open("POST", "fbbs-api.php", true);
+  xhttp_dashinfo.setRequestHeader("Content-type",
+                                  "application/x-www-form-urlencoded");
+  xhttp_dashinfo.send("command="+str+" @");
+}
+
 function showDash(str_full) {
   var xhttp;
   var str_trim = str_full.trim();
@@ -237,6 +282,7 @@ function showDash(str_full) {
   if (str.length == 0) {
     return;
   }
+
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -271,7 +317,7 @@ function showDash(str_full) {
         var new_value = msgValue(entry_obj).trim();
         var new_id = msgId(entry_obj);
         var entry_time = parseInt(msgTimestamp(entry_obj));
-        var timestamp_diff = (entry_time - current_time);
+        var timestamp_diff = (current_time - entry_time);
         var previous_diff = previous_time - entry_time;
         previous_time = entry_time;
         var new_length = new_value.length;
@@ -318,6 +364,9 @@ function showDash(str_full) {
           data : dataStruct,
           labels: label_array,
           options: {
+            hover: {
+                mode: 'index'
+              },
             legend: {
                 position: 'top',
                 labels: {
@@ -339,12 +388,12 @@ function showDash(str_full) {
                         color: color_label_array,
                         offsetGridLines: true
                       },
-                    position: "bottom",
+                    position: "top",
                     ticks: {
                       fontSize: 12,
-                      fontColor: "rgba(0,250,0,0.9)",
+                      fontColor: "rgba(200,250,0,0.9)",
                       fontFamily: "monospace",
-                      mirror: false,
+                      mirror: true,
                       autoSkip: false,
                       display: true
                     },
@@ -367,52 +416,24 @@ function showDash(str_full) {
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("command="+str);
 
-  var xhttp_dashinfo;
-  xhttp_dashinfo = new XMLHttpRequest();
-  xhttp_dashinfo.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var current_time = (new Date()).getTime();
-      try {
-        var jsonresponseparsed = JSON.parse(this.responseText);
-      } catch(err) {
-        return;
-      }
-      if (jsonresponseparsed == undefined ||
-          jsonresponseparsed.value == undefined) return;
-      var jsonresponseobj = jsonresponseparsed.value[0];
-      document.getElementById("board_info").innerHTML = "";
-      Object.keys(jsonresponseobj).forEach(function(key,index) {
-        var array_obj = jsonresponseobj[key];
-        var entry_obj = new Object();
-        for (var i=0; i < array_obj.length; i++) {
-          var keyval_obj = array_obj[i];
-          Object.keys(keyval_obj).forEach(function(key,index) {
-            Object.keys(keyval_obj).forEach(function(id,idx) {
-                entry_obj[id] = keyval_obj[id];
-              });
-          });
-        }
-        var entry_output = msgValue(entry_obj);
-        document.getElementById("board_info").innerHTML += entry_output + "<br>";
-      });
-    }
-  }
-
-  xhttp_dashinfo.open("POST", "fbbs-api.php", true);
-  xhttp_dashinfo.setRequestHeader("Content-type",
-                                  "application/x-www-form-urlencoded");
-  xhttp_dashinfo.send("command="+str+" @");
-
   document.getElementById("board_name").innerHTML = str;
 }
 
 if (prev_cmd_val) {
-  showDash(prev_cmd_val);
   document.getElementById("command").value = prev_cmd_val;
+  updateBoardInfo();
+  showDash(prev_cmd_val);
 }
 
 function getURLWithoutParams() {
   return location.pathname;
+}
+
+function updateBoardInfo() {
+  var dashName = document.getElementById("command").value;
+  if (dashName) {
+    showBoardInfo(dashName);
+  }
 }
 
 function updateDash(addCommandToUrl = false ) {
@@ -429,6 +450,7 @@ function updateDash(addCommandToUrl = false ) {
 function captureFormEnter(e) {
   if (e.preventDefault) e.preventDefault();
 
+  updateBoardInfo();
   updateDash(true);
 
   return false;
@@ -532,6 +554,9 @@ if (formGetMsg.attachEvent) {
 else {
   formGetMsg.addEventListener("submit", captureGetMsgEnter);
 }
+
+updateBoardInfo();
+updateDash();
 
 var dashUpdater = setInterval(updateDash, 5000);
 

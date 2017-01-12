@@ -22,6 +22,12 @@ sudo chmod a+wr fbbs.db
 sudo chmod a+wr fbbs-user.db
 sudo chmod a+wr fbbs-private.db
 
+# To have 404 direct to custom_404 file change the add the following to the
+# apache config"  /etc/apache2/apache2.conf
+
+ErrorDocument 404 /custom_404.html
+
+
 
 # If want to create DBs by hand, instead of using default dbs. (must also change access with chmod as in above).
 

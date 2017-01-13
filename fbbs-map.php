@@ -47,6 +47,8 @@ canvas {
     border-width: 2px;
     outline-width: 2px;
     background-color: black;
+    background-image: url('earth.png');
+    background-size: 100% 100%;
     color: cyan;
 }
 </style>
@@ -109,8 +111,8 @@ canvas {
 <u>|||||||||||||||||</u>
 <br>
 <p>
-<canvas id="dashChart" width="400"
- height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<canvas id="dashChart" width="320"
+ height="240"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
 id="form1">
     board name:
 <?php
@@ -442,7 +444,7 @@ function showDash(str_full) {
                     var clean_y_div = 1.0;
                     for (var j = 0; j < data_array.length; j++) {
                          current_data = data_array[j];
-                         ctx.fillStyle = "rgba(200,200,250,0.9)";
+                         ctx.fillStyle = "rgba(100,0,250,0.95)";
                          if (!isNaN(current_data.x)) {
                            clean_x_div = current_data.y;
                          }

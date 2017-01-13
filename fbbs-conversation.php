@@ -109,8 +109,8 @@ canvas {
 <u>|||||||||||||||||</u>
 <br>
 <p>
-<canvas id="dashChart" width="400"
- height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<canvas id="dashChart" width="640"
+ height="240"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
 id="form1">
     board name:
 <?php
@@ -375,6 +375,7 @@ function showDash(str_full) {
           data : dataStruct,
           labels: label_array,
           options: {
+            responsive: false,
             hover: {
                 mode: 'index'
               },

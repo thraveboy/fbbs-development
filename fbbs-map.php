@@ -111,8 +111,8 @@ canvas {
 <u>|||||||||||||||||</u>
 <br>
 <p>
-<canvas id="dashChart" width="320"
- height="240"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<canvas id="dashChart" width="640"
+ height="480"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
 id="form1">
     board name:
 <?php
@@ -433,6 +433,7 @@ function showDash(str_full) {
           display: true,
           data : dataStruct,
           options: {
+            responsive: false,
             animation: {
                 onComplete: function () {
                     var ctx = this.chart.ctx;

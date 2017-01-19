@@ -280,7 +280,7 @@ function showDash(str_full) {
         var previous_diff = previous_time - entry_time;
         previous_time = entry_time;
         var new_length = new_value.length;
-        label_array.push(new_value);
+        label_array.push(new_label);
         var new_data_entry = Math.round((timestamp_diff/60)*10)/10; // In minutes
         data_array.push(new_value);
         currentColor = getTimeDiffColor(previous_diff);
@@ -316,8 +316,8 @@ function showDash(str_full) {
                 onComplete: function () {
                     var ctx = this.chart.ctx;
                     ctx.font = "monospace",
-                    ctx.fillStyle = "rgba(30, 90, 200, 0.5)";
-                    ctx.strokeColor = "rgba(0,150, 220, 0.8)"; 
+                    ctx.fillStyle = "rgba(130, 190, 200, 0.8)";
+                    ctx.strokeColor = "rgba(0,150, 220, 0.9)";
                     var chart_elem = document.getElementById("dashChart");
                     var chart_x_max = chart_elem.width;
                     var chart_y_max = chart_elem.height;
@@ -334,8 +334,9 @@ function showDash(str_full) {
                           current_x = Math.floor(
                                         (chart_x_max*(current_i/max_i)));
                           current_y = Math.floor(
-                            chart_y_max*(1.0-(parseInt(value,10)/100))) - 10;
-                          ctx.fillText(value, current_x, current_y);
+                            chart_y_max*(1.0-(parseInt(value,10)/100))) - 40;
+                          ctx.fillText(label_array[current_i],
+                                       current_x, current_y);
                           current_i++;
                          });
                       });

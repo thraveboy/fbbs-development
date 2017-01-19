@@ -312,6 +312,35 @@ function showDash(str_full) {
           data : dataStruct,
           labels: label_array,
           options: {
+            animation: {
+                onComplete: function () {
+                    var ctx = this.chart.ctx;
+                    ctx.font = "monospace",
+                    ctx.fillStyle = "rgba(30, 90, 200, 0.5)";
+                    ctx.strokeColor = "rgba(0,150, 220, 0.8)"; 
+                    var chart_elem = document.getElementById("dashChart");
+                    var chart_x_max = chart_elem.width;
+                    var chart_y_max = chart_elem.height;
+                    var current_data;
+                    var current_color = "rgb(0,0,0)";
+                    var clean_x_div = 1.0;
+                    var clean_y_div = 1.0;
+                    this.data.datasets.forEach(function (dataset) {
+                        var current_i = 0;
+                        var max_i = dataset.data.length;
+                        var current_x = 0;
+                        var current_y = 0;
+                        dataset.data.forEach(function (value) {
+                          current_x = Math.floor(
+                                        (chart_x_max*(current_i/max_i)));
+                          current_y = Math.floor(
+                            chart_y_max*(1.0-(parseInt(value,10)/100))) - 10;
+                          ctx.fillText(value, current_x, current_y);
+                          current_i++;
+                         });
+                      });
+                  }
+             },
             legend: {
                 position: 'top',
                 labels: {
@@ -531,15 +560,6 @@ else {
 }
 
 var dashUpdater = setInterval(updateDash, 5000);
-
-</script>
-
-<script>
-if ('speechSynthesis' in window) {
-  var sayHello = new SpeechSynthesisUtterance('hello comrade');
-  sayHello.lang = 'ru-RU';
-  window.speechSynthesis.speak(sayHello);
-}
 
 </script>
 

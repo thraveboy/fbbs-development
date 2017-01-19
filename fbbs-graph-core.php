@@ -73,18 +73,20 @@ canvas {
 
   $lastauth = last_auth_user();
 ?>
-|\\:::::::::::::::::::::::::::::::::::|\--==>(last online:
-<b>[<span id="last_active"><?=$lastauth?></span>]</b>):
+|\\:::::::::::::::::::::::::::::::::::|\
+<br>
+||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
+<?=$username?>
+<br>
+|||..............<u>.....................|//\</u>
+<br>
 <span id="back_to_main">
   <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
     <INPUT TYPE="Submit"  Value="<<--back to main">
   </form>
 </span>
-<br>
-||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
-<?=$username?>
-<br>
-<u>|||...................................|//\</u>
+(last online:
+<b>[<span id="last_active"><?=$lastauth?></span>]</b>)
 <br>
 |||||||||||||||||
 <br>
@@ -243,6 +245,7 @@ function showDash(str_full) {
       var label_array = [];
       var label_sym_array = [];
       var data_array = [];
+      var label_locations = [];
       var color_array = [];
       var color_label_array = [];
       var current_time = (new Date()).getTime()/1000;
@@ -267,13 +270,17 @@ function showDash(str_full) {
           });
         }
         var new_value = msgValue(entry_obj).trim();
+        var disp_value = new_value;
         var new_label = new_value;
+        var new_label_location = new_value;
         var new_value_splitted = new_value.split(" ");
         if (new_value_splitted.length > 1) {
-          new_value = new_value_splitted[0];
+          new_label_location = new_value_splitted[0];
+          new_value = new_label_location;
           new_value_splitted.shift();
           new_label = new_value_splitted.join(" ");
         }
+        label_locations.push(new_label_location);
         var new_id = msgId(entry_obj);
         var entry_time = parseInt(msgTimestamp(entry_obj));
         var timestamp_diff = (entry_time - current_time);
@@ -286,7 +293,7 @@ function showDash(str_full) {
         currentColor = getTimeDiffColor(previous_diff);
         color_array.push(currentColor);
         color_label_array.push(getTimeDiffBorder(previous_diff));
-        dashHtml += "@" + new_id + ":" + new_value + ":minsago[" +
+        dashHtml += "@" + new_id + ":" + disp_value + ":minsago[" +
                     new_data_entry + "]<br>";
       });
       var dataStruct = {
@@ -295,11 +302,15 @@ function showDash(str_full) {
           {
             label: str,
             data : data_array,
+            labelLocations: label_locations,
             fill: true,
             fillColor: "rgba(0,0,125,0.5)",
             borderColor: "rgba(0,200,200,0.2)",
-            backgroundColor: "rgba(200,200,200,0.2)",
-            borderWidth: 1
+            backgroundColor: "rgba(166,9,200,0.2)",
+            pointStyle: "rectRot",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(40,200,170,0.9)",
+            borderWidth: 2
            }
          ]
         };
@@ -316,8 +327,8 @@ function showDash(str_full) {
                 onComplete: function () {
                     var ctx = this.chart.ctx;
                     ctx.font = "monospace",
-                    ctx.fillStyle = "rgba(130, 190, 200, 0.8)";
-                    ctx.strokeColor = "rgba(0,150, 220, 0.9)";
+                    ctx.fillStyle = "rgba(200, 220, 20, 0.6)";
+                    ctx.strokeColor = "rgba(200,220, 20, 0.9)";
                     var chart_elem = document.getElementById("dashChart");
                     var chart_x_max = chart_elem.width;
                     var chart_y_max = chart_elem.height;
@@ -327,14 +338,35 @@ function showDash(str_full) {
                     var clean_y_div = 1.0;
                     this.data.datasets.forEach(function (dataset) {
                         var current_i = 0;
-                        var max_i = dataset.data.length;
+                        var max_i = dataset.labelLocations.length;
                         var current_x = 0;
                         var current_y = 0;
-                        dataset.data.forEach(function (value) {
+                        var gradient = ctx.createLinearGradient(0,0,
+                                          chart_x_max, 0);
+                        gradient.addColorStop("0","blue");
+                        gradient.addColorStop("0.25","cyan");
+                        gradient.addColorStop("0.5","yellow");
+                        gradient.addColorStop("1.0","white");
+                        ctx.fillStyle=gradient;
+                        ctx.strokeStyle="rgba(255,255,255,0.9)";
+                        var text_wid_pix = 0;
+                        var text_height_pix = 0;
+                        dataset.labelLocations.forEach(function (value) {
                           current_x = Math.floor(
-                                        (chart_x_max*(current_i/max_i)));
+                                        ((chart_x_max-280)*(current_i/max_i)));
                           current_y = Math.floor(
-                            chart_y_max*(1.0-(parseInt(value,10)/100))) - 40;
+                              chart_y_max*(1-
+                              Math.min(parseInt(value,10)/100)));
+                          text_wid_pix = ctx.measureText(
+                            label_array[current_i]);
+                          ctx.fillStyle="rgba(130,10,10,0.1)";
+                          ctx.fillRect(current_x-5, current_y-16,
+                            25+text_wid_pix.width, 21);
+                          ctx.strokeStyle="rgba(55,55,55,0.1)";
+                          ctx.rect(current_x-5, current_y-16,
+                            25+text_wid_pix.width, 21);
+                          ctx.stroke();
+                          ctx.fillStyle=gradient;
                           ctx.fillText(label_array[current_i],
                                        current_x, current_y);
                           current_i++;
@@ -343,11 +375,12 @@ function showDash(str_full) {
                   }
              },
             legend: {
-                position: 'top',
+                display: false,
+                position: 'bottom',
                 labels: {
                     showScaleLabels: true,
                     usePointStyle: true,
-                    fontColor: "rgba(0,0,250,0.9)",
+                    fontColor: "rgba(190,250,220,0.9)",
                     fontFamily: "monospace",
                     fontStyle: "bold"
                   },
@@ -375,11 +408,13 @@ function showDash(str_full) {
                 }],
                 yAxes: [{
                     display: true,
+                    position: "right",
                     gridLines: {
+                        display: true,
                         lineWidth: 3,
                       },
                     ticks: {
-                      fontColor: "rgba(150,0,150,0.8)",
+                      fontColor: "rgba(50,50,0,0.3)",
                       fontFamily: "monospace",
                       min: 0
                     },

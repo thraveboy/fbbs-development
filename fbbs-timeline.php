@@ -356,10 +356,12 @@ function showDash(str_full) {
                             var j=0;
                             ctx.font = "6pt monospace";
                             dataset._meta[key].data.forEach(function (p_obj) {
-                                current_x = p_obj._model.x;
                                 current_y = Math.max(p_obj._model.y,
                                                      25);
                                 text_wid_pix = ctx.measureText(label_array[j]);
+                                current_x = p_obj._model.x;
+                                current_x = Math.min(current_x,
+                                  chart_x_max-(text_wid_pix.width));
                                 ctx.fillStyle="rgba(130,10,10,0.1)";
                                 ctx.fillRect(current_x+15, current_y-15,
                                              25+text_wid_pix.width, 16);
@@ -408,7 +410,7 @@ function showDash(str_full) {
                     },
                 }],
                 yAxes: [{
-                    display: true,
+                    display: false,
                     position: "right",
                     gridLines: {
                         display: true,

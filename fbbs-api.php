@@ -76,6 +76,7 @@
   if (($arg_count == 1) ||
       (($arg_count == 2) && ($exploded_previous_command[1] == '@'))) {
     $table_name = $db->escapeString($exploded_previous_command[0]);
+    $table_name = preg_replace("/[^a-zA-Z0-9]+/", "", $table_name);
     $order_type = "DESC";
     $max_limit = "20";
     $order_column = "timestamp";
@@ -137,6 +138,7 @@
 
   if (($arg_count > 1) && (!$retrieved_value)) {
     $table_name = $db->escapeString($exploded_previous_command[0]);
+    $table_name = preg_replace("/[^a-zA-Z0-9]+/", "", $table_name);
     $value = $db->escapeString($exploded_previous_command[1]);
     if (!empty($value) && (($value[0]=='@') && ($arg_count==2))) {
       $id = intval($db->escapeString(substr($value, 1)));
@@ -157,6 +159,8 @@
             }
             $row++;
             $table_extract_name = $db->escapeString($exploded_values[$i*2]);
+            $table_extract_name =
+              preg_replace("/[^a-zA-Z0-9]+/", "", $table_extract_name);
             $table_extract_addr = $db->escapeString($exploded_values[($i*2)+1]);
             $select_query = "SELECT id, ip, value, timestamp FROM " .
                             $table_extract_name . " WHERE id = " .

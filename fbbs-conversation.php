@@ -21,17 +21,6 @@ input {
     color: green;
 }
 
-input:focus {
-    border-color: white;
-    outline-color: white;
-    color: yellow;
-}
-
-input[type=submit]:focus {
-    border-color: white;
-    outline-color: white;
-}
-
 input[type=submit] {
     outline-color: lime;
     background-color: black;
@@ -89,15 +78,15 @@ canvas {
 ||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
 <?=$username?>
 <br>
-<u>|||</u>...................................|//\
+|||..............<u>.....................|//\</u>
 <br>
---==>(last online:
-<b>[<span id="last_active"><?=$lastauth?></span>]</b>):
 <span id="back_to_main">
   <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
     <INPUT TYPE="Submit"  Value="<<--back to main">
   </form>
 </span>
+(last online:
+<b>[<span id="last_active"><?=$lastauth?></span>]</b>)
 <br>
 |||||||||||||||||
 <br>
@@ -109,8 +98,8 @@ canvas {
 <u>|||||||||||||||||</u>
 <br>
 <p>
-<canvas id="dashChart" width="640"
- height="240"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<canvas id="dashChart" width="400"
+ height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
 id="form1">
     board name:
 <?php
@@ -240,14 +229,205 @@ function getValueColor(str) {
 }
 
 var globalCharInstance = null;
-
-function showBoardInfo(str_full) {
+ 
+function showDash(str_full) {
   var xhttp;
   var str_trim = str_full.trim();
   var str = str_trim.split(" ")[0];
   if (str.length == 0) {
     return;
   }
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var ctx = document.getElementById("dashChart");
+      var dashHtml = "";
+      var label_array = [];
+      var label_sym_array = [];
+      var data_array = [];
+      var label_locations = [];
+      var color_array = [];
+      var color_label_array = [];
+      var current_time = (new Date()).getTime()/1000;
+      var previous_time = current_time;
+      try {
+        var jsonresponseparsed = JSON.parse(this.responseText);
+      } catch(err) {
+        return;
+      }
+      if (jsonresponseparsed == undefined ||
+          jsonresponseparsed.value == undefined) return;
+      var jsonresponseobj = jsonresponseparsed.value[0];
+      Object.keys(jsonresponseobj).forEach(function(key,index) {
+        var array_obj = jsonresponseobj[key];
+        var entry_obj = new Object();
+        for (var i=0; i < array_obj.length; i++) {
+          var keyval_obj = array_obj[i];
+          Object.keys(keyval_obj).forEach(function(key,index) {
+            Object.keys(keyval_obj).forEach(function(id,idx) {
+                entry_obj[id] = keyval_obj[id];
+              });
+          });
+        }
+        var new_value = msgValue(entry_obj).trim();
+        var new_timestamp = msgTimestamp(entry_obj);
+        var disp_value = new_value;
+        var new_label = new_value;
+        var new_label_location = new_value;
+        var new_value_splitted = new_value.split(" ");
+        new_value = {x:  new_timestamp*1000, y: new_value.length};
+        label_locations.push(new_label_location);
+        var new_id = msgId(entry_obj);
+        var entry_time = parseInt(msgTimestamp(entry_obj));
+        var timestamp_diff = (entry_time - current_time);
+        var previous_diff = previous_time - entry_time;
+        previous_time = entry_time;
+        var new_length = new_value.length;
+        label_array.push(new_label);
+        var new_data_entry = Math.round((timestamp_diff/60)*10)/10; // In minutes
+        data_array.push(new_value);
+        currentColor = getTimeDiffColor(previous_diff);
+        color_array.push(currentColor);
+        color_label_array.push(getTimeDiffBorder(previous_diff));
+        dashHtml += "@" + new_id + ":" + disp_value + ":minsago[" +
+                    new_data_entry + "]<br>";
+      });
+      var dataStruct = {
+        labels: label_array,
+        datasets: [
+          {
+            label: str,
+            data : data_array,
+            labelLocations: label_locations,
+            fill: true,
+            fillColor: "rgba(0,0,125,0.5)",
+            borderColor: "rgba(0,200,200,0.2)",
+            backgroundColor: "rgba(166,9,200,0.2)",
+            pointStyle: "rectRot",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(40,200,170,0.9)",
+            borderWidth: 2
+           }
+         ]
+        };
+      if (globalCharInstance != null) {
+        globalCharInstance.destroy();
+        globalCharInstance = null;
+      }
+      globalCharInstance = new Chart(ctx, {
+          type: "line",
+          data : dataStruct,
+          labels: label_array,
+          options: {
+            responsive: true,
+            animation: {
+                onComplete: function () {
+                    var ctx = this.chart.ctx;
+                    ctx.font = "monospace",
+                    ctx.fillStyle = "rgba(200, 220, 20, 0.6)";
+                    ctx.strokeColor = "rgba(200,220, 20, 0.9)";
+                    var chart_elem = document.getElementById("dashChart");
+                    var chart_x_max = chart_elem.width;
+                    var chart_y_max = chart_elem.height;
+                    var current_data;
+                    var current_color = "rgb(0,0,0)";
+                    var clean_x_div = 1.0;
+                    var clean_y_div = 1.0;
+                    this.data.datasets.forEach(function (dataset) {
+                        var current_i = 0;
+                        var max_i = dataset.labelLocations.length;
+                        var current_x = 0;
+                        var current_y = 0;
+                        var gradient = ctx.createLinearGradient(0,0,
+                                          chart_x_max, 0);
+                        gradient.addColorStop("0","blue");
+                        gradient.addColorStop("0.25","cyan");
+                        gradient.addColorStop("0.5","yellow");
+                        gradient.addColorStop("1.0","white");
+                        ctx.fillStyle=gradient;
+                        ctx.strokeStyle="rgba(255,255,255,0.9)";
+                        var text_wid_pix = 0;
+                        var text_height_pix = 0;
+                        Object.keys(dataset._meta).forEach(function (key,idx) {
+                            var j=0;
+                            ctx.font = "8pt monospace";
+                            dataset._meta[key].data.forEach(function (p_obj) {
+                                current_y = Math.max(p_obj._model.y,
+                                                     25);
+                                text_wid_pix = ctx.measureText(label_array[j]);
+                                current_x = p_obj._model.x;
+                                current_x = Math.min(current_x,
+                                  chart_x_max-(text_wid_pix.width));
+                                ctx.fillStyle="rgba(130,10,10,0.1)";
+                                ctx.fillRect(current_x+15, current_y-15,
+                                             25+text_wid_pix.width, 16);
+                                ctx.strokeStyle="rgba(55,55,55,0.1)";
+                                ctx.rect(current_x+5, current_y-15,
+                                         25+text_wid_pix.width, 16);
+                                ctx.stroke();
+                                ctx.fillStyle=gradient;
+                                ctx.fillText(label_array[j],
+                                             current_x+10, current_y-15);
+                                ctx.fillRect(p_obj._model.x, p_obj._model.y,
+                                             2,
+                                             Math.abs(chart_y_max-current_y));
+                                j++;
+                              });
+                            });
+                      });
+                   }
+                },
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    showScaleLabels: true,
+                    usePointStyle: true,
+                    fontColor: "rgba(190,250,220,0.9)",
+                    fontFamily: "monospace",
+                    fontStyle: "bold"
+                  },
+                reverse: false,
+                responsive: false
+              },
+            scales: {
+                xAxes: [{
+                    type: "time",
+                    display: true,
+                    gridLines: {
+                        display: true,
+                        offsetGridLines: true
+                      },
+                    position: "bottom",
+                    ticks: {
+                      fontSize: 12,
+                      fontColor: "rgba(0,250,0,0.9)",
+                      fontFamily: "monospace",
+                      mirror: false,
+                      display: true
+                    },
+                }],
+                yAxes: [{
+                    display: false,
+                    position: "right",
+                    gridLines: {
+                        display: true,
+                        lineWidth: 3,
+                      },
+                    ticks: {
+                      fontColor: "rgba(50,50,0,0.3)",
+                      fontFamily: "monospace"
+                    },
+                }]
+              }
+            }
+          });
+        document.getElementById("dash").innerHTML = dashHtml;
+    }
+  }
+  xhttp.open("POST", "fbbs-api.php", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("command="+str);
 
   var xhttp_dashinfo;
   xhttp_dashinfo = new XMLHttpRequest();
@@ -284,168 +464,17 @@ function showBoardInfo(str_full) {
   xhttp_dashinfo.setRequestHeader("Content-type",
                                   "application/x-www-form-urlencoded");
   xhttp_dashinfo.send("command="+str+" @");
-}
-
-function showDash(str_full) {
-  var xhttp;
-  var str_trim = str_full.trim();
-  var str = str_trim.split(" ")[0];
-  if (str.length == 0) {
-    return;
-  }
-
-  xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var ctx = document.getElementById("dashChart");
-      var dashHtml = "";
-      var label_array = [];
-      var label_sym_array = [];
-      var data_array = [];
-      var color_array = [];
-      var color_label_array = [];
-      var current_time = (new Date()).getTime()/1000;
-      var previous_time = current_time;
-      try {
-        var jsonresponseparsed = JSON.parse(this.responseText);
-      } catch(err) {
-        return;
-      }
-      if (jsonresponseparsed == undefined ||
-          jsonresponseparsed.value == undefined) return;
-      var jsonresponseobj = jsonresponseparsed.value[0];
-      Object.keys(jsonresponseobj).forEach(function(key,index) {
-        var array_obj = jsonresponseobj[key];
-        var entry_obj = new Object();
-        for (var i=0; i < array_obj.length; i++) {
-          var keyval_obj = array_obj[i];
-          Object.keys(keyval_obj).forEach(function(key,index) {
-            Object.keys(keyval_obj).forEach(function(id,idx) {
-                entry_obj[id] = keyval_obj[id];
-              });
-          });
-        }
-        var new_value = msgValue(entry_obj).trim();
-        var new_id = msgId(entry_obj);
-        var entry_time = parseInt(msgTimestamp(entry_obj));
-        var timestamp_diff = (current_time - entry_time);
-        var previous_diff = previous_time - entry_time;
-        previous_time = entry_time;
-        var new_length = new_value.length;
-        label_array.push(new_value);
-        var new_data_entry = Math.round((timestamp_diff/60)*10)/10; // In minutes
-        data_array.push(new_data_entry);
-        currentColor = getTimeDiffColor(previous_diff);
-        color_array.push(currentColor);
-        color_label_array.push(getTimeDiffBorder(previous_diff));
-        dashHtml += "@" + new_id + ":" + new_value + ":minsago[" +
-                    new_data_entry + "]<br>";
-      });
-      var dataStruct = {
-        labels: label_array,
-        datasets: [
-          {
-            label: '',
-            data : data_array,
-            lineTension: 1.5,
-            fill: true,
-            fillColor: "rgba(125,250,0,0.2)",
-            borderColor: color_label_array,
-            backgroundColor: color_array,
-            borderWidth: 1
-           },
-          {
-            label: str,
-            type: "line",
-            data : data_array,
-            fill: true,
-            fillColor: "rgba(0,0,125,0.5)",
-            borderColor: "rgba(0,200,200,0.2)",
-            backgroundColor: "rgba(200,200,200,0.2)",
-            borderWidth: 1
-           }
-         ]
-        };
-      if (globalCharInstance != null) {
-        globalCharInstance.destroy();
-        globalCharInstance = null;
-      }
-      globalCharInstance = new Chart(ctx, {
-          type: 'bar',
-          data : dataStruct,
-          labels: label_array,
-          options: {
-            responsive: false,
-            hover: {
-                mode: 'index'
-              },
-            legend: {
-                position: 'top',
-                labels: {
-                    showScaleLabels: true,
-                    usePointStyle: true,
-                    fontColor: "rgba(0,0,250,0.9)",
-                    fontFamily: "monospace",
-                    fontStyle: "bold"
-                  },
-                reverse: true,
-                responsive: false
-              },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true,
-                        lineWidth: 3,
-                        color: color_label_array,
-                        offsetGridLines: true
-                      },
-                    position: "top",
-                    ticks: {
-                      fontSize: 12,
-                      fontColor: "rgba(200,250,0,0.9)",
-                      fontFamily: "monospace",
-                      mirror: true,
-                      autoSkip: false,
-                      display: true
-                    },
-                    max: 0
-                }],
-                yAxes: [{
-                    display: false,
-                    ticks: {
-                      fontColor: "rgba(150,0,150,0.8)",
-                      fontFamily: "monospace"
-                    }
-                }]
-              }
-            }
-          });
-        document.getElementById("dash").innerHTML = dashHtml;
-    }
-  }
-  xhttp.open("POST", "fbbs-api.php", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("command="+str);
 
   document.getElementById("board_name").innerHTML = str;
 }
 
 if (prev_cmd_val) {
-  document.getElementById("command").value = prev_cmd_val;
-  updateBoardInfo();
   showDash(prev_cmd_val);
+  document.getElementById("command").value = prev_cmd_val;
 }
 
 function getURLWithoutParams() {
   return location.pathname;
-}
-
-function updateBoardInfo() {
-  var dashName = document.getElementById("command").value;
-  if (dashName) {
-    showBoardInfo(dashName);
-  }
 }
 
 function updateDash(addCommandToUrl = false ) {
@@ -462,7 +491,6 @@ function updateDash(addCommandToUrl = false ) {
 function captureFormEnter(e) {
   if (e.preventDefault) e.preventDefault();
 
-  updateBoardInfo();
   updateDash(true);
 
   return false;
@@ -566,9 +594,6 @@ if (formGetMsg.attachEvent) {
 else {
   formGetMsg.addEventListener("submit", captureGetMsgEnter);
 }
-
-updateBoardInfo();
-updateDash();
 
 var dashUpdater = setInterval(updateDash, 5000);
 

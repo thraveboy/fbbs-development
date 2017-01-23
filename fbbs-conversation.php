@@ -248,7 +248,9 @@ function showDash(str_full) {
       var label_locations = [];
       var color_array = [];
       var color_label_array = [];
-      var current_time = (new Date()).getTime()/1000;
+      var min_timestamp = new Date().getTime();
+      var max_timestamp = min_timestamp;
+      var current_time = min_timestamp/1000;
       var previous_time = current_time;
       try {
         var jsonresponseparsed = JSON.parse(this.responseText);
@@ -271,6 +273,11 @@ function showDash(str_full) {
         }
         var new_value = msgValue(entry_obj).trim();
         var new_timestamp = msgTimestamp(entry_obj);
+        var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+        if (timestamp_to_milli < min_timestamp)
+          min_timestamp = timestamp_to_milli;
+        if (timestamp_to_milli > max_timestamp)
+          max_timestamp = timestamp_to_milli;
         var disp_value = new_value;
         var new_label = new_value;
         var new_label_location = new_value;
@@ -393,6 +400,10 @@ function showDash(str_full) {
             scales: {
                 xAxes: [{
                     type: "time",
+                    time: {
+                        max: moment(max_timestamp),
+                        min: moment(min_timestamp)
+                    },
                     display: true,
                     gridLines: {
                         display: true,
@@ -405,7 +416,7 @@ function showDash(str_full) {
                       fontFamily: "monospace",
                       mirror: false,
                       display: true
-                    },
+                    }
                 }],
                 yAxes: [{
                     display: false,

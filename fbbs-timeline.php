@@ -248,6 +248,8 @@ function showDash(str_full) {
       var label_locations = [];
       var color_array = [];
       var color_label_array = [];
+      var min_timestamp = new Date().getTime();
+      var max_timestamp = min_timestamp;
       var current_time = (new Date()).getTime()/1000;
       var previous_time = current_time;
       try {
@@ -281,6 +283,12 @@ function showDash(str_full) {
           new_value = {x: new_label_location, y: new_label.length};
         }
         label_locations.push(new_label_location);
+        var timestamp_to_milli = moment.unix(
+            parseInt(new_label_location,10)).format("x");
+        if (timestamp_to_milli < min_timestamp)
+          min_timestamp = timestamp_to_milli;
+        if (timestamp_to_milli > max_timestamp)
+          max_timestamp = timestamp_to_milli;
         var new_id = msgId(entry_obj);
         var entry_time = parseInt(msgTimestamp(entry_obj));
         var timestamp_diff = (entry_time - current_time);
@@ -363,7 +371,7 @@ function showDash(str_full) {
                                 current_x = Math.min(current_x,
                                   chart_x_max-(text_wid_pix.width));
                                 ctx.fillStyle="rgba(130,10,10,0.1)";
-                                ctx.fillRect(current_x+15, current_y-15,
+                                ctx.fillRect(current_x+5, current_y-15,
                                              25+text_wid_pix.width, 16);
                                 ctx.strokeStyle="rgba(55,55,55,0.1)";
                                 ctx.rect(current_x+5, current_y-15,
@@ -371,7 +379,10 @@ function showDash(str_full) {
                                 ctx.stroke();
                                 ctx.fillStyle=gradient;
                                 ctx.fillText(label_array[j],
-                                             current_x+10, current_y-15);
+                                             current_x+10, current_y-9);
+                                ctx.fillRect(p_obj._model.x, p_obj._model.y,
+                                             2,
+                                             Math.abs(chart_y_max-current_y));
                                 j++;
                               });
                             });
@@ -394,6 +405,10 @@ function showDash(str_full) {
             scales: {
                 xAxes: [{
                     type: "time",
+                    time: {
+                        max: moment(max_timestamp),
+                        min: moment(min_timestamp)
+                    },
                     display: true,
                     gridLines: {
                         display: true,

@@ -5,17 +5,51 @@ function FBBSDataDraw (ctx, title = "", type = "value-time") {
   this.title = title;
   this.type = type;
   this.processDataDraw = processDataDraw;
+  this.generateDataObj = generateDataObj;
+}
+
+function generateDataObj (keyval_obj) {
+  var current_time = new Date().getTime();
+  var return_obj = { 
+      data: "", 
+      label: "", 
+      html: "",
+      min_timestamp: current_time,
+      max_timestamp: current_time
+  };
+  var entry_obj = new Object();
+ 
+  Object.keys(keyval_obj).forEach(function(key,index) {
+    Object.keys(keyval_obj).forEach(function(id,idx) {
+        entry_obj[id] = keyval_obj[id];
+       });
+    });
+  var new_id = msgId(entry_obj);
+  var new_value = msgValue(entry_obj).trim();
+  var new_timestamp = msgTimestamp(entry_obj);
+  return_obj.label = new_value;
+  var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+  if (timestamp_to_milli < return_obj.min_timestamp)
+    return_obj.min_timestamp = timestamp_to_milli;
+  if (timestamp_to_milli > return_obj.max_timestamp)
+    return_obj.max_timestamp = timestamp_to_milli;
+  return_obj.data = {x:  new_timestamp*1000, y: new_value.length};
+  var entry_time = parseInt(msgTimestamp(entry_obj));
+  var timestamp_diff = (timestamp_to_milli - current_time);
+  var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
+  return_obj.html = "|@" + new_id + "|minsago(" + new_timediff + ")-=> " +
+                    new_value + "<br>";
+  return return_obj;
 }
 
 function processDataDraw( input_json ) {
   var data_array = [];
   var label_array = [];
-  var label_locations = [];
+  var dashHtml = "";
   var min_timestamp = new Date().getTime();
   var max_timestamp = min_timestamp;
   var current_time = min_timestamp/1000;
   var previous_time = current_time;
-  var dashHtml = "";
 
   try {
     var jsonresponseparsed = JSON.parse(input_json);
@@ -31,36 +65,22 @@ function processDataDraw( input_json ) {
 
   Object.keys(jsonresponseobj).forEach(function(key,index) {
     var array_obj = jsonresponseobj[key];
-    var entry_obj = new Object();
-    for (var i=0; i < array_obj.length; i++) {
-      var keyval_obj = array_obj[i];
-      Object.keys(keyval_obj).forEach(function(key,index) {
-        Object.keys(keyval_obj).forEach(function(id,idx) {
-            entry_obj[id] = keyval_obj[id];
-           });
-        });
-      }
-      var new_id = msgId(entry_obj);
-      var new_value = msgValue(entry_obj).trim();
-      var new_timestamp = msgTimestamp(entry_obj);
-      var new_label = new_value;
-      var new_label_location = new_value;
-      var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
-      if (timestamp_to_milli < min_timestamp)
-        min_timestamp = timestamp_to_milli;
-      if (timestamp_to_milli > max_timestamp)
-        max_timestamp = timestamp_to_milli;
-      var new_obj = {x:  new_timestamp*1000, y: new_value.length};
-      var entry_time = parseInt(msgTimestamp(entry_obj));
-      var timestamp_diff = (entry_time - current_time);
-      var new_length = new_value.length;
-      data_array.push(new_obj);
-      label_array.push(new_label);
-      label_locations.push(new_label_location);
-      var new_timediff = Math.round((timestamp_diff/60)*10)/10; // In minut$
-
-      dashHtml += "@" + new_id + ":" + new_value + ":minsago[" +
-                  new_timediff + "]<br>";
+    var raw_obj = {}
+    array_obj.forEach(function addObj (var_obj) { 
+        Object.keys(var_obj).forEach(function(vkey,vindex) {
+            raw_obj[vkey] = var_obj[vkey];
+          });
+      });
+    var data_obj = this.generateDataObj(raw_obj);
+    data_array.push(data_obj.data);
+    label_array.push(data_obj.label);
+    dashHtml += data_obj.html;
+    if (data_obj.min_timestamp < min_timestamp) {
+      min_timestamp = data_obj.min_timestamp;
+    }
+    if (data_obj.min_timestamp > max_timestamp) {
+      max_timestamp = data_obj.max_timestamp;
+    }
    });
 
    var dataStruct = {
@@ -69,7 +89,6 @@ function processDataDraw( input_json ) {
        {
          label: this.title,
          data : data_array,
-         labelLocations: label_locations,
          fill: true,
          fillColor: "rgba(0,0,125,0.5)",
          borderColor: "rgba(0,200,200,0.2)",
@@ -107,8 +126,6 @@ function processDataDraw( input_json ) {
                  var clean_x_div = 1.0;
                  var clean_y_div = 1.0;
                  this.data.datasets.forEach(function (dataset) {
-                     var current_i = 0;
-                     var max_i = dataset.labelLocations.length;
                      var current_x = 0;
                      var current_y = 0;
                      var gradient = ctx.createLinearGradient(0,0,

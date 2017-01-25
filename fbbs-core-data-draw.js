@@ -4,11 +4,16 @@ function FBBSDataDraw (ctx, title = "", type = "value-time") {
   this.ctx = ctx;
   this.title = title;
   this.type = type;
+  this.xaxis = "time";
   this.processDataDraw = processDataDraw;
-  this.generateDataObj = generateDataObj;
+  this.generateDataObj = generateTimeValueDataObj;
+  if (type == "value-label") {
+    this.generateDataObj = generateValueLabelDataObj;
+    this.xaxis = "linear";
+  }
 }
 
-function generateDataObj (keyval_obj) {
+function generateTimeValueDataObj (keyval_obj) {
   var current_time = new Date().getTime();
   var return_obj = { 
       data: "", 
@@ -42,6 +47,41 @@ function generateDataObj (keyval_obj) {
   return return_obj;
 }
 
+function generateValueLabelDataObj (keyval_obj) {
+  var current_time = new Date().getTime();
+  var return_obj = { 
+      data: "", 
+      label: "", 
+      html: "",
+      min_timestamp: current_time,
+      max_timestamp: current_time
+  };
+  var entry_obj = new Object();
+ 
+  Object.keys(keyval_obj).forEach(function(key,index) {
+    Object.keys(keyval_obj).forEach(function(id,idx) {
+        entry_obj[id] = keyval_obj[id];
+       });
+    });
+  var new_id = msgId(entry_obj);
+  var new_value = msgValue(entry_obj).trim();
+  var new_timestamp = msgTimestamp(entry_obj);
+  return_obj.label = new_value;
+  var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+  if (timestamp_to_milli < return_obj.min_timestamp)
+    return_obj.min_timestamp = timestamp_to_milli;
+  if (timestamp_to_milli > return_obj.max_timestamp)
+    return_obj.max_timestamp = timestamp_to_milli;
+  return_obj.data = new_value.length;
+  var entry_time = parseInt(msgTimestamp(entry_obj));
+  var timestamp_diff = (timestamp_to_milli - current_time);
+  var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
+  return_obj.html = "|@" + new_id + "|minsago=" + new_timediff + ")-=> " +
+                    new_value + "<br>";
+  return return_obj;
+}
+
+
 function processDataDraw( input_json ) {
   var data_array = [];
   var label_array = [];
@@ -63,6 +103,7 @@ function processDataDraw( input_json ) {
 
   var jsonresponseobj = jsonresponseparsed.value[0];
 
+  var dataProcessor = this.generateDataObj;
   Object.keys(jsonresponseobj).forEach(function(key,index) {
     var array_obj = jsonresponseobj[key];
     var raw_obj = {}
@@ -71,7 +112,7 @@ function processDataDraw( input_json ) {
             raw_obj[vkey] = var_obj[vkey];
           });
       });
-    var data_obj = this.generateDataObj(raw_obj);
+    var data_obj = dataProcessor(raw_obj);
     data_array.push(data_obj.data);
     label_array.push(data_obj.label);
     dashHtml += data_obj.html;
@@ -181,7 +222,7 @@ function processDataDraw( input_json ) {
                },
              scales: {
                 xAxes: [{
-                    type: "time",
+                    type: this.xaxis,
                     time: {
                         max: moment(max_timestamp),
                         min: moment(min_timestamp)

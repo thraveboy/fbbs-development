@@ -125,7 +125,7 @@ function processDataDraw( input_json ) {
    });
 
    var dataStruct = {
-     labels: this.label_array,
+     labels: label_array,
      datasets: [
        {
          label: this.title,
@@ -141,107 +141,97 @@ function processDataDraw( input_json ) {
        }
      ]
      };
-   if (fbbsGlobalCharInstance != null) {
-     fbbsGlobalCharInstance.destroy();
-     fbbsGlobalCharInstance = null;
-   }
 
-   var chart_elem = document.getElementById("dashChart");
-
-   fbbsGlobalCharInstance = new Chart(this.ctx, {
-     type: "line",
-     data : dataStruct,
-     labels: label_array,
-     options: {
-         responsive: true,
-         animation: {
-             onComplete: function () {
-                 var ctx = this.chart.ctx;
-                 ctx.font = "monospace",
-                 ctx.fillStyle = "rgba(200, 220, 20, 0.6)";
-                 ctx.strokeColor = "rgba(200,220, 20, 0.9)";
-                 var chart_x_max = chart_elem.width;
-                 var chart_y_max = chart_elem.height;
-                 var current_data;
-                 var current_color = "rgb(0,0,0)";
-                 var clean_x_div = 1.0;
-                 var clean_y_div = 1.0;
-                 this.data.datasets.forEach(function (dataset) {
-                     var current_x = 0;
-                     var current_y = 0;
-                     var gradient = ctx.createLinearGradient(0,0,
-                                                             chart_x_max, 0);
-                     gradient.addColorStop("0","blue");
-                     gradient.addColorStop("0.25","cyan");
-                     gradient.addColorStop("0.5","yellow");
-                     gradient.addColorStop("1.0","white");
-                     ctx.fillStyle=gradient;
-                     ctx.strokeStyle="rgba(255,255,255,0.9)";
-                     var text_wid_pix = 0;
-                     var text_height_pix = 0;
-                     Object.keys(dataset._meta).forEach(function (key,idx) {
-                         var j=0;
-                         ctx.font = "8pt monospace";
-                         dataset._meta[key].data.forEach(function (p_obj) {
-                             current_y = Math.max(p_obj._model.y,
-                                                  25);
-                             text_wid_pix = ctx.measureText(label_array[j]);
-                             current_x = p_obj._model.x;
-                             current_x = Math.min(current_x,
-                                 chart_x_max-(text_wid_pix.width));
-                             ctx.fillStyle="rgba(130,10,10,0.1)";
-                             ctx.fillRect(current_x+15, current_y-15,
-                                          25+text_wid_pix.width, 16);
-                             ctx.strokeStyle="rgba(55,55,55,0.1)";
-                             ctx.rect(current_x+5, current_y-15,
-                                      25+text_wid_pix.width, 16);
-                             ctx.stroke();
-                             ctx.fillStyle=gradient;
-                             ctx.fillText(label_array[j],
-                                          current_x+10, current_y-15);
-                             ctx.fillRect(p_obj._model.x, p_obj._model.y,
-                                          2,
-                                          Math.abs(chart_y_max-current_y));
-                             j++;
-                           });
+  var chart_options = {
+           responsive: true,
+           animation: {
+               onComplete: function () {
+                   var ctx = this.chart.ctx;
+                   ctx.font = "monospace",
+                   ctx.fillStyle = "rgba(200, 220, 20, 0.6)";
+                   ctx.strokeColor = "rgba(200,220, 20, 0.9)";
+                   var chart_elem = document.getElementById("dashChart");
+                   var chart_x_max = chart_elem.width;
+                   var chart_y_max = chart_elem.height;
+                   var current_data;
+                   var current_color = "rgb(0,0,0)";
+                   var clean_x_div = 1.0;
+                   var clean_y_div = 1.0;
+                   this.data.datasets.forEach(function (dataset) {
+                       var current_x = 0;
+                       var current_y = 0;
+                       var gradient = ctx.createLinearGradient(0,0,
+                                                               chart_x_max, 0);
+                       gradient.addColorStop("0","blue");
+                       gradient.addColorStop("0.25","cyan");
+                       gradient.addColorStop("0.5","yellow");
+                       gradient.addColorStop("1.0","white");
+                       ctx.fillStyle=gradient;
+                       ctx.strokeStyle="rgba(255,255,255,0.9)";
+                       var text_wid_pix = 0;
+                       var text_height_pix = 0;
+                       Object.keys(dataset._meta).forEach(function (key,idx) {
+                           var j=0;
+                           ctx.font = "8pt monospace";
+                           dataset._meta[key].data.forEach(function (p_obj) {
+                               current_y = Math.max(p_obj._model.y,
+                                                    25);
+                               text_wid_pix = ctx.measureText(label_array[j]);
+                               current_x = p_obj._model.x;
+                               current_x = Math.min(current_x,
+                                   chart_x_max-(text_wid_pix.width));
+                               ctx.fillStyle="rgba(130,10,10,0.1)";
+                               ctx.fillRect(current_x+15, current_y-15,
+                                            25+text_wid_pix.width, 16);
+                               ctx.strokeStyle="rgba(55,55,55,0.1)";
+                               ctx.rect(current_x+5, current_y-15,
+                                        25+text_wid_pix.width, 16);
+                               ctx.stroke();
+                               ctx.fillStyle=gradient;
+                               ctx.fillText(label_array[j],
+                                            current_x+10, current_y-15);
+                               ctx.fillRect(p_obj._model.x, p_obj._model.y,
+                                            2,
+                                            Math.abs(chart_y_max-current_y));
+                               j++;
+                             });
+                         });
                        });
-                     });
-                   }
-                 },
-             legend: {
-                 display: true,
-                 position: 'bottom',
-                 labels: {
-                     showScaleLabels: true,
-                     usePointStyle: true,
-                     fontColor: "rgba(190,250,220,0.9)",
-                     fontStyle: "bold"
+                     }
                    },
-                 reverse: false,
-                 responsive: false
-               },
-             scales: {
-                xAxes: [{
-                    type: this.xaxis,
-                    time: {
-                        max: moment(max_timestamp),
-                        min: moment(min_timestamp)
-                    },
-                    display: true,
-                    gridLines: {
-                        display: true,
-                        offsetGridLines: true
+               legend: {
+                   display: true,
+                   position: 'bottom',
+                   labels: {
+                       showScaleLabels: true,
+                       usePointStyle: true,
+                       fontColor: "rgba(190,250,220,0.9)",
+                       fontStyle: "bold"
+                     },
+                   reverse: false
+                 },
+               scales: {
+                  xAxes: [{
+                      type: this.xaxis,
+                      time: {
+                          max: moment(max_timestamp),
+                          min: moment(min_timestamp)
                       },
-                    position: "bottom",
-                    ticks: {
-                      fontSize: 12,
-                      fontColor: "rgba(0,250,0,0.9)",
-                      fontFamily: "monospace",
-                      mirror: false,
-                      display: true
-                    }
-                }],
-                yAxes: [{
+                      display: true,
+                      gridLines: {
+                          display: true,
+                          offsetGridLines: true
+                        },
+                      position: "bottom",
+                      ticks: {
+                        fontSize: 12,
+                        fontColor: "rgba(0,250,0,0.9)",
+                        fontFamily: "monospace",
+                        mirror: false,
+                        display: true
+                      }
+                  }],
+                  yAxes: [{
                     display: false,
                     position: "right",
                     gridLines: {
@@ -252,10 +242,21 @@ function processDataDraw( input_json ) {
                       fontColor: "rgba(50,50,0,0.3)",
                       fontFamily: "monospace"
                     },
-                }]
-              }
-            }
-          });
+                  }]
+                }
+              };
+
+  if (fbbsGlobalCharInstance != null) {
+    fbbsGlobalCharInstance.destroy();
+    fbbsGlobalCharInstance = null;
+  }
+  fbbsGlobalCharInstance = new Chart(this.ctx, {
+      type: "line",
+      data: dataStruct,
+      labels: label_array,
+      options: chart_options
+    });
+
   document.getElementById("dash").innerHTML = dashHtml;
 }
 

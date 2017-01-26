@@ -201,7 +201,6 @@ function showDash(str_full) {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       var ctx = document.getElementById("dashChart");
-      var data_draw_transform = new FBBSDataDraw(ctx);
       var dashHtml = "";
       var label_array = [];
       var label_sym_array = [];

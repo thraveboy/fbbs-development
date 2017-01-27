@@ -201,7 +201,6 @@ function showDash(str_full) {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       var ctx = document.getElementById("dashChart");
-      var data_draw_transform = new FBBSDataDraw(ctx);
       var dashHtml = "";
       var label_array = [];
       var label_sym_array = [];
@@ -214,7 +213,7 @@ function showDash(str_full) {
       var current_time = min_timestamp/1000;
       var previous_time = current_time;
 
-      var dataTransformDraw = new FBBSDataDraw(ctx, str);
+      var dataTransformDraw = new FBBSDataDraw(ctx, str, "value_label");
       dataTransformDraw.processDataDraw(this.responseText);
       return;
     }

@@ -1,15 +1,16 @@
 var fbbsGlobalCharInstance = null;
 
-function FBBSDataDraw (ctx, title = "", type = "value-time") {
+function FBBSDataDraw (ctx, title = "", type = "value_time") {
   this.ctx = ctx;
   this.title = title;
   this.type = type;
   this.xaxis = "time";
+  this.chart_type = "line";
   this.processDataDraw = processDataDraw;
   this.generateDataObj = generateTimeValueDataObj;
-  if (type == "value-label") {
+  if (type == "value_label") {
     this.generateDataObj = generateValueLabelDataObj;
-    this.xaxis = "linear";
+    this.xaxis = "category";
   }
 }
 
@@ -128,6 +129,7 @@ function processDataDraw( input_json ) {
      labels: label_array,
      datasets: [
        {
+         type: this.chart_type,
          label: this.title,
          data : data_array,
          fill: true,
@@ -228,7 +230,7 @@ function processDataDraw( input_json ) {
                         fontColor: "rgba(0,250,0,0.9)",
                         fontFamily: "monospace",
                         mirror: false,
-                        display: true
+                        display: false
                       }
                   }],
                   yAxes: [{
@@ -251,7 +253,7 @@ function processDataDraw( input_json ) {
     fbbsGlobalCharInstance = null;
   }
   fbbsGlobalCharInstance = new Chart(this.ctx, {
-      type: "line",
+      type: "bar",
       data: dataStruct,
       labels: label_array,
       options: chart_options

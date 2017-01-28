@@ -213,7 +213,7 @@ function showDash(str_full) {
       var current_time = min_timestamp/1000;
       var previous_time = current_time;
 
-      var dataTransformDraw = new FBBSDataDraw(ctx, str, "value_label");
+      var dataTransformDraw = new FBBSDataDraw(ctx, str);
       dataTransformDraw.processDataDraw(this.responseText);
       return;
     }

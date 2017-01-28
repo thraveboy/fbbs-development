@@ -44,7 +44,6 @@ canvas {
 
 <script src="moment-with-locales.min.js"></script>
 <script src="Chart.min.js"></script>
-<script src="fbbs-core-data-draw.js"></script>
 
 <?php
   $previous_cmd_trim = '';
@@ -99,8 +98,8 @@ canvas {
 <u>|||||||||||||||||</u>
 <br>
 <p>
-<canvas id="dashChart" width="400"
- height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<canvas id="dashChart" width="640"
+ height="480"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
 id="form1">
     board name:
 <?php
@@ -127,6 +126,8 @@ read message->
 </form>
 <br>
 <div id="dash"></div>
+
+<script src="fbbs-core-data-draw.js"></script>
 
 <script>
 

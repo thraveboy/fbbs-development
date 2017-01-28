@@ -10,6 +10,9 @@ function FBBSDataDraw (ctx, title = "", type = "value_time") {
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
 
+  this.ctx.width = 640;
+  this.ctx.height = 480;
+
   var chart_elem = document.getElementById("dashChart");
   var chart_x_max = chart_elem.width;
 
@@ -221,6 +224,7 @@ function processDataDraw( input_json ) {
 
   var chart_options = {
            responsive: true,
+           maintainAspectRatio: true,
            animation: {
                duration: 10,
                onComplete: function () {

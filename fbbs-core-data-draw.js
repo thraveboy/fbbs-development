@@ -351,21 +351,20 @@ function processDataDraw( input_json ) {
                 }
               };
 
+ 
+  var old_graph = null; 
+  if (fbbsGlobalCharInstance != null) {
+    old_graph = fbbsGlobalCharInstance;
+    old_graph.destroy();
+    old_graph = null;
+  }
   var new_graph =  new Chart(this.ctx, {
       type: "bar",
       data: dataStruct,
       labels: label_array,
       options: chart_options
     });
- 
-  var old_graph = null; 
-  if (fbbsGlobalCharInstance != null) {
-    old_graph = fbbsGlobalCharInstance;
-  }
   fbbsGlobalCharInstance = new_graph;
-  if (old_graph != null) {
-    old_graph.destroy();
-  }
 
   document.getElementById("dash").innerHTML = dashHtml;
 }

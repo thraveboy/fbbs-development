@@ -223,7 +223,7 @@ function processDataDraw( input_json ) {
   var label_type = this.label_type;
 
   var chart_options = {
-           responsive: true,
+           responsive: false,
            maintainAspectRatio: true,
            animation: {
                duration: 10,
@@ -324,7 +324,7 @@ function processDataDraw( input_json ) {
                       },
                       display: false,
                       gridLines: {
-                          display: true,
+                          display: false,
                           offsetGridLines: true
                         },
                       position: "bottom",
@@ -340,7 +340,7 @@ function processDataDraw( input_json ) {
                     display: false,
                     position: "right",
                     gridLines: {
-                        display: true,
+                        display: false,
                         lineWidth: 3,
                       },
                     ticks: {

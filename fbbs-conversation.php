@@ -124,6 +124,10 @@ read message->
 <br>
 <div id="dash"></div>
 
+<script src="moment-with-locales.min.js"></script>
+<script src="Chart.min.js"></script>
+<script src="fbbs-core-data-draw.js"></script>
+
 <script>
 
 String.prototype.hashCode = function(){
@@ -387,10 +391,6 @@ else {
 var dashUpdater = setInterval(updateDash, 5000);
 
 </script>
-
-<script src="moment-with-locales.min.js"></script>
-<script src="Chart.min.js"></script>
-<script src="fbbs-core-data-draw.js"></script>
 
 </body>
 </html>

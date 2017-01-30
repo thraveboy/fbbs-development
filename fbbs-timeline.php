@@ -2,7 +2,7 @@
 <html>
 <head>
 <style>
-body, input {
+body, div, span, input {
     font-family: monospace;
     background-color: black;
     color: green;
@@ -31,6 +31,7 @@ p {
 }
 
 canvas {
+    font-family: monospace;
     outline-color: purple;
     border-color: purple;
     border-width: 2px;
@@ -41,10 +42,6 @@ canvas {
 </style>
 </head>
 <body>
-
-<script src="moment-with-locales.min.js"></script>
-<script src="Chart.min.js"></script>
-<script src="fbbs-core-data-draw.js"></script>
 
 <?php
   $previous_cmd_trim = '';
@@ -74,35 +71,22 @@ canvas {
 
   $lastauth = last_auth_user();
 ?>
-|\\:::::::::::::::::::::::::::::::::::|\
+
+:::::::::::::::::::::::::::;::::::::: Welcome, <?=$username?>.
 <br>
-||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
-<?=$username?>
-<br>
-|||..............<u>.....................|//\</u>
-<br>
+: <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) :
 <span id="back_to_main">
   <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
     <INPUT TYPE="Submit"  Value="<<--back to main">
   </form>
 </span>
-(last online:
-<b>[<span id="last_active"><?=$lastauth?></span>]</b>)
 <br>
-|||||||||||||||||
+<u>::::::::::::::::::::::::::::::::::::: (last online:
+<b>[<span id="last_active"><?=$lastauth?></span>]</b>)</u>
 <br>
-|||<u> board info </u>|| <span id="board_name"></span>
-<br>
-<u>|||||||||||||||||</u>
-<br>
-<div id="board_info"></div>
-<u>|||||||||||||||||</u>
-<br>
-<p>
-<canvas id="dashChart" width="400"
- height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<br> <FORM NAME="form1" METHOD="POST"
 id="form1">
-    board name:
+board name:
 <?php
   echo '<INPUT TYPE="text" VALUE="' . $previous_command  . ' " ';
   echo 'id="command" NAME="command" SIZE="20" autofocus>';
@@ -111,10 +95,10 @@ id="form1">
 </FORM>
 <br>
 <FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
-  post message=>
+  enter data=>
 <?php
   echo '<INPUT TYPE="Text" VALUE="" ';
-  echo 'id="message" NAME="command" SIZE="60">';
+  echo 'id="message" NAME="command" SIZE="40">';
 ?>
   <INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
 </FORM>
@@ -125,8 +109,24 @@ read message->
 <INPUT TYPE="Submit" Value="<=enter|" SIZE ="7">
 <span id="displaymsg"></span>
 </form>
+
+<canvas id="dashChart" width="640"
+ height="480"></canvas>
+<br>
+::::::::::::::
+<br>
+: <u>board info</u> : <span id="board_name"></span>
+<br>
+::::::::::::::
+<br>
+<div id="board_info"></div>
+<br>
 <br>
 <div id="dash"></div>
+
+<script src="moment-with-locales.min.js"></script>
+<script src="Chart.min.js"></script>
+<script src="fbbs-core-data-draw.js"></script>
 
 <script>
 
@@ -213,7 +213,7 @@ function showDash(str_full) {
       var current_time = min_timestamp/1000;
       var previous_time = current_time;
 
-      var dataTransformDraw = new FBBSDataDraw(ctx, str);
+      var dataTransformDraw = new FBBSDataDraw(ctx, str, "value_time");
       dataTransformDraw.processDataDraw(this.responseText);
       return;
     }
@@ -258,7 +258,7 @@ function showDash(str_full) {
                                   "application/x-www-form-urlencoded");
   xhttp_dashinfo.send("command="+str+" @");
 
-  document.getElementById("board_name").innerHTML = str;
+  document.getElementById("board_name").textContent = str;
 }
 
 if (prev_cmd_val) {
@@ -315,7 +315,7 @@ function capturePostEnter(e) {
                                   "application/x-www-form-urlencoded");
   var data = document.getElementById("message");
   if (data && data.value) {
-    var commandString = "command="+dashName+" [<?=$username?>] "+data.value;
+    var commandString = "command="+dashName+" "+data.value;
     xhttp_dashinfo.send(commandString);
     document.getElementById("message").value = "";
   }
@@ -394,3 +394,6 @@ var dashUpdater = setInterval(updateDash, 5000);
 
 </body>
 </html>
+
+
+

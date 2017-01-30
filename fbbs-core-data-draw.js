@@ -1,10 +1,10 @@
 var fbbsGlobalCharInstance = null;
 
-function FBBSDataDraw (ctx, title = "", type = "value_time") {
+function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.ctx = ctx;
   this.title = title;
   this.type = type;
-  this.xaxis = "time";
+  this.xaxis_type = "category";
   this.chart_type = "line";
   this.label_type = "descent";
   this.chart_border_color = "rgba(200,0,100,0.9)";
@@ -40,14 +40,14 @@ function FBBSDataDraw (ctx, title = "", type = "value_time") {
 
   this.processDataDraw = processDataDraw;
   this.generateDataObj = generateTimeValueDataObj;
-  if (type == "value_label") {
-    this.generateDataObj = generateValueLabelDataObj;
-    this.xaxis = "linear";
-    this.label_type = "descent";
+  if (type == "value_time") {
+    this.generateDataObj = generateValueTimeDataObj;
+    this.xaxis_type = "time";
+    this.label_type = "point";
   }
   if (type == "prev_timediff_60min") {
     this.generateDataObj = generatePrevTimeDiff60MinDataObj;
-    this.xaxis = "category";
+    this.xaxis_type = "category";
     this.label_type = "descent";
   }
 }
@@ -84,6 +84,49 @@ function generateTimeValueDataObj (keyval_obj) {
   return_obj.html = "|@" + new_id + "|minsago(" + new_timediff + ")-=> " +
                     new_value + "<br>";
   return_obj.label = new_value + "|minsago(" + new_timediff +")";
+  return return_obj;
+}
+
+function generateValueTimeDataObj (keyval_obj) {
+  var current_time = new Date().getTime();
+  var return_obj = { 
+      data: "", 
+      label: "", 
+      html: "",
+      min_timestamp: current_time,
+      max_timestamp: current_time
+  };
+  var entry_obj = new Object();
+ 
+  Object.keys(keyval_obj).forEach(function(key,index) {
+    Object.keys(keyval_obj).forEach(function(id,idx) {
+        entry_obj[id] = keyval_obj[id];
+       });
+    });
+  var new_id = msgId(entry_obj);
+  var new_value = msgValue(entry_obj).trim();
+
+  var splitted_new = new_value.split(" ");
+  var new_timestamp = "";
+  if ((splitted_new != undefined) && (splitted_new[0] != undefined)) {
+    new_timestamp = moment(splitted_new[0]).unix();
+  } 
+  else {
+    new_timestamp = msgTimestamp(entry_obj);
+  }
+  return_obj.label = new_value;
+  var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+  if (timestamp_to_milli < return_obj.min_timestamp)
+    return_obj.min_timestamp = timestamp_to_milli;
+  if (timestamp_to_milli > return_obj.max_timestamp)
+    return_obj.max_timestamp = timestamp_to_milli;
+  return_obj.data = {x:  new_timestamp*1000, y: new_value.length};
+  var entry_time = parseInt(msgTimestamp(entry_obj));
+  var timestamp_diff = (timestamp_to_milli - current_time);
+  var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
+  return_obj.html = "|@" + new_id + "|ts(" + new_timestamp*1000 + ")-=> " +
+                    new_value + "<br>";
+  return_obj.label = new_value;
   return return_obj;
 }
 
@@ -199,6 +242,9 @@ function processDataDraw( input_json ) {
     }
    });
 
+   var min_moment = moment(min_timestamp);
+   var max_moment = moment(max_timestamp);
+
    var dataStruct = {
      labels: label_array,
      datasets: [
@@ -215,13 +261,12 @@ function processDataDraw( input_json ) {
          pointBackgroundColor: "rgba(40,200,170,0.9)",
          borderWidth: 2
        }
-     ]
-     };
+     ]};
 
   var label_text_color = this.label_text_color;
   var label_line_color = this.label_line_color;
   var label_type = this.label_type;
-
+  var xaxis_type = this.xaxis_type;
   var chart_options = {
            responsive: false,
            maintainAspectRatio: true,
@@ -317,10 +362,10 @@ function processDataDraw( input_json ) {
                  },
                scales: {
                   xAxes: [{
-//                      type: this.xaxis,
+                      type: xaxis_type,
                       time: {
-                          max: moment(max_timestamp),
-                          min: moment(min_timestamp)
+                          max: max_moment,
+                          min: min_moment
                       },
                       display: false,
                       gridLines: {

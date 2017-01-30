@@ -10,7 +10,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
-
+  this.axis_grid_color = "rgba(30,180,180,0.2)";
   this.ctx.width = 640;
   this.ctx.height = 480;
 
@@ -270,6 +270,7 @@ function processDataDraw( input_json ) {
   var label_type = this.label_type;
   var xaxis_type = this.xaxis_type;
   var xaxis_display = this.xaxis_display;
+  var xaxis_grid_color = this.xaxis_grid_color;
 
   var chart_options = {
            responsive: false,
@@ -373,8 +374,10 @@ function processDataDraw( input_json ) {
                       },
                       display: xaxis_display,
                       gridLines: {
-                          display: true,
-                          offsetGridLines: true
+                          color: xaxis_grid_color,
+                          borderDash: [5, 5],
+                          display: xaxis_display,
+                          offsetGridLines: false
                         },
                       position: "bottom",
                       ticks: {

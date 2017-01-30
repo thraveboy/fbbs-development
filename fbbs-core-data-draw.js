@@ -47,6 +47,12 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.xaxis_display = true;
     this.label_type = "point";
   }
+  if (type == "value_height_label") {
+    this.generateDataObj = generateValueHeightLabelDataObj;
+    this.xaxis_type = "category";
+    this.xaxis_display = false;
+    this.label_type = "point";
+  }
   if (type == "prev_timediff_60min") {
     this.generateDataObj = generatePrevTimeDiff60MinDataObj;
     this.xaxis_type = "category";
@@ -129,6 +135,49 @@ function generateValueTimeDataObj (keyval_obj) {
   return_obj.html = "|@" + new_id + "|ts(" + new_timestamp*1000 + ")-=> " +
                     new_value + "<br>";
   return_obj.label = new_value;
+  return return_obj;
+}
+
+function generateValueHeightLabelDataObj (keyval_obj) {
+  var current_time = new Date().getTime();
+  var return_obj = { 
+      data: "", 
+      label: "", 
+      html: "",
+      min_timestamp: current_time,
+      max_timestamp: current_time
+  };
+  var entry_obj = new Object();
+ 
+  Object.keys(keyval_obj).forEach(function(key,index) {
+    Object.keys(keyval_obj).forEach(function(id,idx) {
+        entry_obj[id] = keyval_obj[id];
+       });
+    });
+  var new_id = msgId(entry_obj);
+  var new_value = msgValue(entry_obj).trim();
+  var new_value_splitted = new_value.split(" ");
+  var new_data = 0;
+  if ((new_value_splitted != undefined) && 
+      (new_value_splitted[0] != undefined)) {
+    new_data = parseInt(new_value_splitted[0],10);
+    if (new_data == undefined) {
+      new_data = 0;
+    }
+  }
+  return_obj.data = new_data;
+  var new_timestamp = msgTimestamp(entry_obj);
+  return_obj.label = new_value;
+  var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+  if (timestamp_to_milli < return_obj.min_timestamp)
+    return_obj.min_timestamp = timestamp_to_milli;
+  if (timestamp_to_milli > return_obj.max_timestamp)
+    return_obj.max_timestamp = timestamp_to_milli;
+  var entry_time = parseInt(msgTimestamp(entry_obj));
+  var timestamp_diff = (timestamp_to_milli - current_time);
+  var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
+  return_obj.html = "|@" + new_id + "|minsago=" + new_timediff + ")-=> " +
+                    new_value + "<br>";
   return return_obj;
 }
 

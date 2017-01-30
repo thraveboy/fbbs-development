@@ -9,6 +9,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.label_type = "descent";
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
+  this.xaxis_display = false;
 
   this.ctx.width = 640;
   this.ctx.height = 480;
@@ -43,6 +44,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   if (type == "value_time") {
     this.generateDataObj = generateValueTimeDataObj;
     this.xaxis_type = "time";
+    this.xaxis_display = true;
     this.label_type = "point";
   }
   if (type == "prev_timediff_60min") {
@@ -267,6 +269,8 @@ function processDataDraw( input_json ) {
   var label_line_color = this.label_line_color;
   var label_type = this.label_type;
   var xaxis_type = this.xaxis_type;
+  var xaxis_display = this.xaxis_display;
+
   var chart_options = {
            responsive: false,
            maintainAspectRatio: true,
@@ -367,9 +371,9 @@ function processDataDraw( input_json ) {
                           max: max_moment,
                           min: min_moment
                       },
-                      display: false,
+                      display: xaxis_display,
                       gridLines: {
-                          display: false,
+                          display: true,
                           offsetGridLines: true
                         },
                       position: "bottom",
@@ -378,7 +382,7 @@ function processDataDraw( input_json ) {
                         fontColor: "rgba(0,250,0,0.9)",
                         fontFamily: "monospace",
                         mirror: false,
-                        display: false
+                        display: true
                       }
                   }],
                   yAxes: [{

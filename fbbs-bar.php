@@ -2,7 +2,7 @@
 <html>
 <head>
 <style>
-body, input {
+body, div, span, input {
     font-family: monospace;
     background-color: black;
     color: green;
@@ -31,6 +31,7 @@ p {
 }
 
 canvas {
+    font-family: monospace;
     outline-color: purple;
     border-color: purple;
     border-width: 2px;
@@ -41,9 +42,6 @@ canvas {
 </style>
 </head>
 <body>
-
-<script src="moment-with-locales.min.js"></script>
-<script src="Chart.min.js"></script>
 
 <?php
   $previous_cmd_trim = '';
@@ -73,35 +71,22 @@ canvas {
 
   $lastauth = last_auth_user();
 ?>
-|\\:::::::::::::::::::::::::::::::::::|\
+
+:::::::::::::::::::::::::::;::::::::: Welcome, <?=$username?>.
 <br>
-||| <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) ||\
-<?=$username?>
-<br>
-|||..............<u>.....................|//\</u>
-<br>
+: <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) :
 <span id="back_to_main">
   <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
     <INPUT TYPE="Submit"  Value="<<--back to main">
   </form>
 </span>
-(last online:
-<b>[<span id="last_active"><?=$lastauth?></span>]</b>)
 <br>
-|||||||||||||||||
+<u>::::::::::::::::::::::::::::::::::::: (last online:
+<b>[<span id="last_active"><?=$lastauth?></span>]</b>)</u>
 <br>
-|||<u> board info </u>|| <span id="board_name"></span>
-<br>
-<u>|||||||||||||||||</u>
-<br>
-<div id="board_info"></div>
-<u>|||||||||||||||||</u>
-<br>
-<p>
-<canvas id="dashChart" width="400"
- height="100"></canvas> </p> <br> <FORM NAME="form1" METHOD="POST"
+<br> <FORM NAME="form1" METHOD="POST"
 id="form1">
-    board name:
+board name:
 <?php
   echo '<INPUT TYPE="text" VALUE="' . $previous_command  . ' " ';
   echo 'id="command" NAME="command" SIZE="20" autofocus>';
@@ -110,10 +95,10 @@ id="form1">
 </FORM>
 <br>
 <FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
-  post message=>
+  enter data=>
 <?php
   echo '<INPUT TYPE="Text" VALUE="" ';
-  echo 'id="message" NAME="command" SIZE="60">';
+  echo 'id="message" NAME="command" SIZE="40">';
 ?>
   <INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
 </FORM>
@@ -124,8 +109,24 @@ read message->
 <INPUT TYPE="Submit" Value="<=enter|" SIZE ="7">
 <span id="displaymsg"></span>
 </form>
+
+<canvas id="dashChart" width="640"
+ height="480"></canvas>
+<br>
+::::::::::::::
+<br>
+: <u>board info</u> : <span id="board_name"></span>
+<br>
+::::::::::::::
+<br>
+<div id="board_info"></div>
+<br>
 <br>
 <div id="dash"></div>
+
+<script src="moment-with-locales.min.js"></script>
+<script src="Chart.min.js"></script>
+<script src="fbbs-core-data-draw.js"></script>
 
 <script>
 
@@ -151,47 +152,6 @@ function funPrefixes(prefix_length = 5) {
     return_string += char_set[Math.floor(Math.random() * char_set.length)];
   }
   return return_string;
-}
-
-function msgId(msgObj) {
-  var return_html = "";
-  if (msgObj) {
-    if (msgObj["id"] !=  undefined) {
-      return_html += msgObj["id"];
-    }
-  }
-  return return_html;
-}
-
-function msgIP(msgObj) {
-  var return_html = "";
-  if (msgObj) {
-    if (msgObj["ip"] !=  undefined) {
-      return_html += msgObj["ip"];
-    }
-  }
-  return return_html;
-}
-
-function msgValue(msgObj) {
-  var return_html = "";
-  if (msgObj) {
-    if (msgObj["value"] !=  undefined) {
-      return_html += msgObj["value"];
-    }
-  }
-  return return_html;
-}
-
-function msgTimestamp(msgObj) {
-  var return_html = "";
-
-  if (msgObj) {
-    if (msgObj["timestamp"] !=  undefined) {
-     return_html += msgObj["timestamp"];
-    }
-  }
-  return return_html ;
 }
 
 function getTimeDiffColor(sec_diff) {
@@ -248,182 +208,15 @@ function showDash(str_full) {
       var label_locations = [];
       var color_array = [];
       var color_label_array = [];
-      var current_time = (new Date()).getTime()/1000;
+      var min_timestamp = new Date().getTime();
+      var max_timestamp = min_timestamp;
+      var current_time = min_timestamp/1000;
       var previous_time = current_time;
-      try {
-        var jsonresponseparsed = JSON.parse(this.responseText);
-      } catch(err) {
-        return;
-      }
-      if (jsonresponseparsed == undefined ||
-          jsonresponseparsed.value == undefined) return;
-      var jsonresponseobj = jsonresponseparsed.value[0];
-      Object.keys(jsonresponseobj).forEach(function(key,index) {
-        var array_obj = jsonresponseobj[key];
-        var entry_obj = new Object();
-        for (var i=0; i < array_obj.length; i++) {
-          var keyval_obj = array_obj[i];
-          Object.keys(keyval_obj).forEach(function(key,index) {
-            Object.keys(keyval_obj).forEach(function(id,idx) {
-                entry_obj[id] = keyval_obj[id];
-              });
-          });
-        }
-        var new_value = msgValue(entry_obj).trim();
-        var disp_value = new_value;
-        var new_label = new_value;
-        var new_label_location = new_value;
-        var new_value_splitted = new_value.split(" ");
-        if (new_value_splitted.length > 1) {
-          new_label_location = new_value_splitted[0];
-          new_value = new_label_location;
-          new_value_splitted.shift();
-          new_label = new_value_splitted.join(" ");
-        }
-        label_locations.push(new_label_location);
-        var new_id = msgId(entry_obj);
-        var entry_time = parseInt(msgTimestamp(entry_obj));
-        var timestamp_diff = (entry_time - current_time);
-        var previous_diff = previous_time - entry_time;
-        previous_time = entry_time;
-        var new_length = new_value.length;
-        label_array.push(new_label);
-        var new_data_entry = Math.round((timestamp_diff/60)*10)/10; // In minutes
-        data_array.push(new_value);
-        currentColor = getTimeDiffColor(previous_diff);
-        color_array.push(currentColor);
-        color_label_array.push(getTimeDiffBorder(previous_diff));
-        dashHtml += "@" + new_id + ":" + disp_value + ":minsago[" +
-                    new_data_entry + "]<br>";
-      });
-      var dataStruct = {
-        labels: label_array,
-        datasets: [
-          {
-            label: str,
-            data : data_array,
-            labelLocations: label_locations,
-            fill: true,
-            fillColor: "rgba(0,0,125,0.5)",
-            borderColor: "rgba(0,200,200,0.2)",
-            backgroundColor: "rgba(166,9,200,0.2)",
-            pointStyle: "rectRot",
-            pointRadius: 5,
-            pointBackgroundColor: "rgba(40,200,170,0.9)",
-            borderWidth: 2
-           }
-         ]
-        };
-      if (globalCharInstance != null) {
-        globalCharInstance.destroy();
-        globalCharInstance = null;
-      }
-      globalCharInstance = new Chart(ctx, {
-          type: "bar",
-          data : dataStruct,
-          labels: label_array,
-          options: {
-            animation: {
-                onComplete: function () {
-                    var ctx = this.chart.ctx;
-                    ctx.font = "monospace",
-                    ctx.fillStyle = "rgba(200, 220, 20, 0.6)";
-                    ctx.strokeColor = "rgba(200,220, 20, 0.9)";
-                    var chart_elem = document.getElementById("dashChart");
-                    var chart_x_max = chart_elem.width;
-                    var chart_y_max = chart_elem.height;
-                    var current_data;
-                    var current_color = "rgb(0,0,0)";
-                    var clean_x_div = 1.0;
-                    var clean_y_div = 1.0;
-                    this.data.datasets.forEach(function (dataset) {
-                        var current_i = 0;
-                        var max_i = dataset.labelLocations.length;
-                        var current_x = 0;
-                        var current_y = 0;
-                        var gradient = ctx.createLinearGradient(0,0,
-                                          chart_x_max, 0);
-                        gradient.addColorStop("0","blue");
-                        gradient.addColorStop("0.25","cyan");
-                        gradient.addColorStop("0.5","yellow");
-                        gradient.addColorStop("1.0","white");
-                        ctx.fillStyle=gradient;
-                        ctx.strokeStyle="rgba(255,255,255,0.9)";
-                        var text_wid_pix = 0;
-                        var text_height_pix = 0;
-                        dataset.labelLocations.forEach(function (value) {
-                          current_x = Math.floor(
-                                        ((chart_x_max-275)*(current_i/max_i)));
-                          current_y = Math.floor(
-                              ((chart_y_max-75)*((1-
-                              Math.min(parseInt(value,10)/100))+0.1))+10);
-                          ctx.font = "6pt monospace"
-                          text_wid_pix = ctx.measureText(
-                            label_array[current_i]);
-                          ctx.fillStyle="rgba(130,10,10,0.1)";
-                          ctx.fillRect(current_x-15, current_y-11,
-                            25+text_wid_pix.width, 16);
-                          ctx.strokeStyle="rgba(55,55,55,0.1)";
-                          ctx.rect(current_x-15, current_y-11,
-                            25+text_wid_pix.width, 16);
-                          ctx.stroke();
-                          ctx.fillStyle=gradient;
-                          ctx.fillText(label_array[current_i],
-                                       current_x-10, current_y);
-                          current_i++;
-                         });
-                      });
-                  }
-             },
-            legend: {
-                display: false,
-                position: 'bottom',
-                labels: {
-                    showScaleLabels: true,
-                    usePointStyle: true,
-                    fontColor: "rgba(190,250,220,0.9)",
-                    fontFamily: "monospace",
-                    fontStyle: "bold"
-                  },
-                reverse: false,
-                responsive: false
-              },
-            scales: {
-                type: "linear",
-                xAxes: [{
-                    display: true,
-                    gridLines: {
-                        display: true,
-                        offsetGridLines: true
-                      },
-                    position: "bottom",
-                    ticks: {
-                      fontSize: 12,
-                      fontColor: "rgba(0,250,0,0.9)",
-                      fontFamily: "monospace",
-                      mirror: false,
-                      autoSkip: false,
-                      display: false,
-                      min: 0
-                    },
-                }],
-                yAxes: [{
-                    display: true,
-                    position: "right",
-                    gridLines: {
-                        display: true,
-                        lineWidth: 3,
-                      },
-                    ticks: {
-                      fontColor: "rgba(50,50,0,0.3)",
-                      fontFamily: "monospace",
-                      min: 0
-                    },
-                }]
-              }
-            }
-          });
-        document.getElementById("dash").innerHTML = dashHtml;
+
+      var dataTransformDraw = new FBBSDataDraw(ctx, str,
+                                               "value_height_label_bar");
+      dataTransformDraw.processDataDraw(this.responseText);
+      return;
     }
   }
   xhttp.open("POST", "fbbs-api.php", true);
@@ -466,7 +259,7 @@ function showDash(str_full) {
                                   "application/x-www-form-urlencoded");
   xhttp_dashinfo.send("command="+str+" @");
 
-  document.getElementById("board_name").innerHTML = str;
+  document.getElementById("board_name").textContent = str;
 }
 
 if (prev_cmd_val) {
@@ -602,3 +395,6 @@ var dashUpdater = setInterval(updateDash, 5000);
 
 </body>
 </html>
+
+
+

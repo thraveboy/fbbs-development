@@ -53,6 +53,13 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.xaxis_display = false;
     this.label_type = "point";
   }
+  if (type == "value_height_label_bar") {
+    this.generateDataObj = generateValueHeightLabelDataObj;
+    this.xaxis_type = "category";
+    this.xaxis_display = false;
+    this.label_type = "point";
+    this.chart_type = "bar";
+  }
   if (type == "prev_timediff_60min") {
     this.generateDataObj = generatePrevTimeDiff60MinDataObj;
     this.xaxis_type = "category";

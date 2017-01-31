@@ -11,8 +11,8 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
   this.axis_grid_color = "rgba(30,180,180,0.2)";
-  this.ctx.width = 640;
-  this.ctx.height = 480;
+  this.ctx.width = 1280;
+  this.ctx.height = 720;
   this.ornate = true;
   var chart_elem = document.getElementById("dashChart");
   var chart_x_max = chart_elem.width;
@@ -480,7 +480,8 @@ function processDataDraw( input_json ) {
     });
   fbbsGlobalCharInstance = new_graph;
 
-  document.getElementById("dash").innerHTML = dashHtml;
+  document.getElementById("dash").innerHTML = 
+    "<span class=\"data_output\">" + dashHtml + "</span>";
 }
 
 function msgId(msgObj) {
@@ -522,4 +523,45 @@ function msgTimestamp(msgObj) {
     }
   }
   return return_html ;
+}
+
+function fbbsUpdateBoardInfo(str) {
+ var xhttp_dashinfo;
+  xhttp_dashinfo = new XMLHttpRequest();
+  xhttp_dashinfo.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var current_time = (new Date()).getTime();
+      try {
+        var jsonresponseparsed = JSON.parse(this.responseText);
+      } catch(err) {
+        return;
+      }
+      if (jsonresponseparsed == undefined ||
+          jsonresponseparsed.value == undefined) return;
+      var jsonresponseobj = jsonresponseparsed.value[0];
+      var data_html = "";
+      Object.keys(jsonresponseobj).forEach(function(key,index) {
+        var array_obj = jsonresponseobj[key];
+        var entry_obj = new Object();
+        for (var i=0; i < array_obj.length; i++) {
+          var keyval_obj = array_obj[i];
+          Object.keys(keyval_obj).forEach(function(key,index) {
+            Object.keys(keyval_obj).forEach(function(id,idx) {
+                entry_obj[id] = keyval_obj[id];
+              });
+          });
+        }
+        var entry_output = msgValue(entry_obj);
+        data_html += entry_output + "<br>";
+      });
+      document.getElementById("board_info").innerHTML = "<span " +
+        "class=\"data_output\">" + data_html + "</span>";
+    }
+  }
+  xhttp_dashinfo.open("POST", "fbbs-api.php", true);
+  xhttp_dashinfo.setRequestHeader("Content-type",
+                                  "application/x-www-form-urlencoded");
+  xhttp_dashinfo.send("command="+str+" @");
+
+  document.getElementById("board_name").textContent = str;
 }

@@ -1,5 +1,6 @@
-body, div, span, input {
-    font-family: monospace;
+body, div, span, form, input, #board_info, #dash {
+    font-family: monospace; 
+    font-size: xx-large;
     background-color: black;
     color: green;
 }
@@ -17,9 +18,16 @@ input {
     color: green;
 }
 
+span.data_output {
+    font-family: monospace; 
+    font-size: 8pt; 
+}
+
 input[type=submit] {
     outline-color: lime;
     background-color: black;
+    font-family: monospace; 
+/*    font-size: 12pt; */
 }
 
 p {
@@ -27,7 +35,7 @@ p {
 }
 
 canvas {
-    font-family: monospace;
+    font-family: monospace; 
     outline-color: purple;
     border-color: purple;
     border-width: 2px;

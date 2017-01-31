@@ -32,7 +32,7 @@ id="form1">
 :  post message|>
 <?php
   echo '<INPUT TYPE="Text" VALUE="" ';
-  echo 'id="message" NAME="command" SIZE="40">';
+  echo 'id="message" NAME="command" SIZE="25">';
 ?>
   <INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
 </FORM>
@@ -48,7 +48,6 @@ id="form1">
 <br>
 <br>
 <div id="board_info"></div>
-<br>
 <br>
 <canvas id="dashChart"></canvas>
 

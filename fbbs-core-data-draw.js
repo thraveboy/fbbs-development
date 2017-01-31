@@ -7,6 +7,8 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.xaxis_type = "category";
   this.chart_type = "line";
   this.label_type = "descent";
+  this.label_font_size = "20pt";
+  this.label_descent_size = 50;
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
@@ -332,9 +334,11 @@ function processDataDraw( input_json ) {
   var xaxis_display = this.xaxis_display;
   var xaxis_grid_color = this.xaxis_grid_color;
   var draw_ornate = this.ornate;
+  var label_font_size = this.label_font_size;
+  var label_descent_size = this.label_descent_size;
 
   var chart_options = {
-           responsive: false,
+           responsive: true,
            maintainAspectRatio: true,
            animation: {
                duration: 10,
@@ -363,13 +367,14 @@ function processDataDraw( input_json ) {
                        var prev_point_x = 0;
                        Object.keys(dataset._meta).forEach(function (key,idx) {
                            var j=0;
-                           ctx.font = "8pt monospace";
+                           ctx.font = label_font_size + " monospace";
                            dataset._meta[key].data.forEach(function (p_obj) {
                                current_y = Math.max(p_obj._model.y,
                                                     25);
                                if (label_type == "descent") {
                                  current_y = (chart_y_max)  - 
-                                             (chart_y_max - ((j+2) * 25));
+                                             (chart_y_max - ((j+2) * 
+                                             label_descent_size));
                                }
                                text_wid_pix = ctx.measureText(label_array[j]);
                                current_x = p_obj._model.x;
@@ -397,10 +402,10 @@ function processDataDraw( input_json ) {
                                }
                                ctx.fillStyle="rgba(3,13,29,0.81)";
                                ctx.fillRect(current_x+10, current_y-15,
-                                            25+text_wid_pix.width, 21);
+                                            25+text_wid_pix.width, 42);
                                ctx.strokeStyle="rgba(150,250,50,0.2)";
                                ctx.rect(current_x+5, current_y-15,
-                                        25+text_wid_pix.width, 16);
+                                        25+text_wid_pix.width, 32);
                                ctx.stroke();
 
                                ctx.fillStyle=label_text_color;

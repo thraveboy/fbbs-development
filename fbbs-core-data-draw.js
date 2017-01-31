@@ -13,7 +13,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.axis_grid_color = "rgba(30,180,180,0.2)";
   this.ctx.width = 640;
   this.ctx.height = 480;
-
+  this.ornate = true;
   var chart_elem = document.getElementById("dashChart");
   var chart_x_max = chart_elem.width;
 
@@ -46,12 +46,14 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.xaxis_type = "time";
     this.xaxis_display = true;
     this.label_type = "point";
+    this.ornate = false;
   }
   if (type == "value_height_label") {
     this.generateDataObj = generateValueHeightLabelDataObj;
     this.xaxis_type = "category";
     this.xaxis_display = false;
     this.label_type = "point";
+    this.ornate = false;
   }
   if (type == "value_height_label_bar") {
     this.generateDataObj = generateValueHeightLabelDataObj;
@@ -59,11 +61,13 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.xaxis_display = false;
     this.label_type = "point";
     this.chart_type = "bar";
+    this.ornate = false;
   }
   if (type == "prev_timediff_60min") {
     this.generateDataObj = generatePrevTimeDiff60MinDataObj;
     this.xaxis_type = "category";
     this.label_type = "descent";
+    this.ornate = false;
   }
 }
 
@@ -327,6 +331,7 @@ function processDataDraw( input_json ) {
   var xaxis_type = this.xaxis_type;
   var xaxis_display = this.xaxis_display;
   var xaxis_grid_color = this.xaxis_grid_color;
+  var draw_ornate = this.ornate;
 
   var chart_options = {
            responsive: false,
@@ -371,20 +376,25 @@ function processDataDraw( input_json ) {
                                current_x = Math.min(current_x,
                                    chart_x_max-(text_wid_pix.width));
 
-                               ctx.beginPath();
-                               ctx.moveTo(prev_x, prev_y);
-                               ctx.lineTo(p_obj._model.x + 1,
-                                          p_obj._model.y * 2);
-                               ctx.strokeStyle=label_line_color;
-                               ctx.stroke();
-                               ctx.moveTo(prev_point_x, prev_point_y);
-                               ctx.lineTo(p_obj._model.x,
-                                          p_obj._model.y);
-                               ctx.stroke();
-                               ctx.moveTo(p_obj._model.x, p_obj._model.y);
-                               ctx.lineTo(prev_x, prev_y);
-                               ctx.stroke();
-
+                               if (draw_ornate) {
+                                 ctx.beginPath();
+                                 ctx.moveTo(prev_x, prev_y);
+                                 ctx.lineTo(p_obj._model.x + 1,
+                                            p_obj._model.y * 2);
+                                 ctx.strokeStyle=label_line_color;
+                                 ctx.stroke();
+                                 ctx.moveTo(prev_point_x, prev_point_y);
+                                 ctx.lineTo(p_obj._model.x,
+                                            p_obj._model.y);
+                                 ctx.stroke();
+                                 ctx.moveTo(p_obj._model.x, p_obj._model.y);
+                                 ctx.lineTo(prev_x, prev_y);
+                                 ctx.stroke();
+                                 ctx.fillStyle=label_text_color;
+                                 ctx.fillRect(p_obj._model.x, p_obj._model.y,
+                                              1,
+                                              Math.abs(p_obj._model.y));
+                               }
                                ctx.fillStyle="rgba(3,13,29,0.81)";
                                ctx.fillRect(current_x+10, current_y-15,
                                             25+text_wid_pix.width, 21);
@@ -393,10 +403,6 @@ function processDataDraw( input_json ) {
                                         25+text_wid_pix.width, 16);
                                ctx.stroke();
 
-                               ctx.fillStyle=label_text_color;
-                               ctx.fillRect(p_obj._model.x, p_obj._model.y,
-                                            1,
-                                            Math.abs(p_obj._model.y));
                                ctx.fillStyle=label_text_color;
                                ctx.fillText(label_array[j],
                                             current_x+10, current_y-15);

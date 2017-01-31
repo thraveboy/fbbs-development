@@ -70,59 +70,9 @@ canvas {
   $username = authorize_user();
 
   $lastauth = last_auth_user();
-?>
 
-:::::::::::::::::::::::::::;::::::::: Welcome, <?=$username?>.
-<br>
-: <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) :
-<span id="back_to_main">
-  <FORM NAME="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
-    <INPUT TYPE="Submit"  Value="<<--back to main">
-  </form>
-</span>
-<br>
-<u>::::::::::::::::::::::::::::::::::::: (last online:
-<b>[<span id="last_active"><?=$lastauth?></span>]</b>)</u>
-<br>
-<br> <FORM NAME="form1" METHOD="POST"
-id="form1">
-board name:
-<?php
-  echo '<INPUT TYPE="text" VALUE="' . $previous_command  . ' " ';
-  echo 'id="command" NAME="command" SIZE="20" autofocus>';
+  require_once 'fbbs-std-cmd.php';
 ?>
-    <INPUT TYPE="submit" Value="|/\enter/\|">
-</FORM>
-<br>
-<FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
-  enter data=>
-<?php
-  echo '<INPUT TYPE="Text" VALUE="" ';
-  echo 'id="message" NAME="command" SIZE="40">';
-?>
-  <INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
-</FORM>
-<br>
-<FORM NAME="viewmsg" METHOD="POST" ID="getmsg" ACTION="">
-read message->
-<INPUT TYPE="TEXT" VALUE="" id="getmsgid" SIZE="5">
-<INPUT TYPE="Submit" Value="<=enter|" SIZE ="7">
-<span id="displaymsg"></span>
-</form>
-
-<canvas id="dashChart" width="640"
- height="480"></canvas>
-<br>
-::::::::::::::
-<br>
-: <u>board info</u> : <span id="board_name"></span>
-<br>
-::::::::::::::
-<br>
-<div id="board_info"></div>
-<br>
-<br>
-<div id="dash"></div>
 
 <script src="moment-with-locales.min.js"></script>
 <script src="Chart.min.js"></script>

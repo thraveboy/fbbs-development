@@ -57,5 +57,28 @@ read message@>
 <br>
 <div id="dash"></div>
 
+<script src="moment-with-locales.min.js"></script>
+<script src="Chart.min.js"></script>
+<script src="fbbs-core-data-draw.js"></script>
 
+<script>
+
+function launchCommand() {
+  var str = document.getElementById("launch_command").value;
+  var str_trim = str.trim();
+  var str = str_trim.split(" ")[0];
+   if (str.length == 0) {
+    document.getElementById("dash").innerHTML = "Try help... ";
+    return false;
+  }
+  else {
+    var dashName = document.getElementById("command").value;
+    document.getElementById("launch_command_form").action ="fbbs-" + str +
+                                                    ".php?command=" +dashName;
+    document.getElementById("launch_command_form").submit();
+  }
+  return false;
+}
+
+</script>
 

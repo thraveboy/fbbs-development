@@ -74,10 +74,6 @@ canvas {
   require_once 'fbbs-std-cmd.php';
 ?>
 
-<script src="moment-with-locales.min.js"></script>
-<script src="Chart.min.js"></script>
-<script src="fbbs-core-data-draw.js"></script>
-
 <script>
 
 String.prototype.hashCode = function(){

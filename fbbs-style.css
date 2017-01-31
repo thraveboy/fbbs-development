@@ -1,0 +1,38 @@
+body, div, span, input {
+    font-family: monospace;
+    background-color: black;
+    color: green;
+}
+
+input {
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: blue;
+    outline-width: 1px;
+    outline-width-left: 0px;
+    outline-width-right: 0px;
+    outline-color: lime;
+    color: green;
+}
+
+input[type=submit] {
+    outline-color: lime;
+    background-color: black;
+}
+
+p {
+  white-space: nowrap;
+}
+
+canvas {
+    font-family: monospace;
+    outline-color: purple;
+    border-color: purple;
+    border-width: 2px;
+    outline-width: 2px;
+    background-color: black;
+    color: cyan;
+}
+

@@ -1,8 +1,8 @@
-
 var fbbsGlobalCharInstance = null;
 
 function FBBSDataDraw (ctx, title = "", type = "value_label") {
-  this.ctx = ctx.getContext("2d");
+  this.ctx = ctx;
+  this.ctx_2d_context = ctx.getContext("2d");
   this.title = title;
   this.type = type;
   this.xaxis_type = "category";
@@ -14,10 +14,10 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
   this.axis_grid_color = "rgba(30,180,180,0.2)";
-  this.ctx.width = 1280;
-  this.ctx.height = 720;
+  this.ctx_2d_context.width = 1280;
+  this.ctx_2d_context.height = 720;
   this.ornate = true;
-  var chart_elem = this.ctx;
+  var chart_elem = this.ctx_2d_context;
   var chart_x_max = chart_elem.width;
 
   var gradient = chart_elem.createLinearGradient(0,0, chart_x_max, 0);
@@ -473,8 +473,12 @@ function processDataDraw( input_json ) {
   var old_graph = null; 
   if (fbbsGlobalCharInstance != null) {
     old_graph = fbbsGlobalCharInstance;
+    old_graph.destroy();
+    old_graph = null;
   }
-  var new_graph =  new Chart(this.ctx, {
+
+  var new_node_2d_context = this.ctx;
+  var new_graph =  new Chart(new_node_2d_context, {
       type: "bar",
       data: dataStruct,
       labels: label_array,
@@ -482,10 +486,6 @@ function processDataDraw( input_json ) {
     });
   fbbsGlobalCharInstance = new_graph;
 
-  if (old_graph != null) {
-    old_graph.destroy();
-    old_graph = null;
-  }
   document.getElementById("dash").innerHTML = 
     "<span class=\"data_output\">" + dashHtml + "</span>";
 }

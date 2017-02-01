@@ -13,7 +13,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
-  this.axis_grid_color = "rgba(30,180,180,0.2)";
+  this.xaxis_grid_color = "rgba(30,180,18,0.2)";
   this.ctx_2d_context.width = 1280;
   this.ctx_2d_context.height = 720;
   this.ornate = true;
@@ -50,7 +50,6 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   if (type == "value_height_label") {
     this.generateDataObj = generateValueHeightLabelDataObj;
     this.xaxis_type = "category";
-    this.xaxis_display = false;
     this.label_type = "point";
     this.ornate = false;
   }
@@ -306,6 +305,34 @@ function processDataDraw( input_json ) {
    var min_moment = moment(min_timestamp);
    var max_moment = moment(max_timestamp);
 
+   var background_fill_color = this.chart_fill_color;
+   
+   if (this.chart_type == "bar") {
+     var background_fill_colors = [];
+     if (data_array.length > 0) {
+       var color_selector = 0;
+       var current_color = "rgba(50,100,200,0.9)";
+       for (var i = 0; i < data_array.length; i++) {
+         color_selector = i%3;
+         switch (color_selector) {
+           case 0:
+             current_color = "rgba(150,25,200,9)";
+             break;
+           case 1:
+             current_color = "rgba(200,190,20,0.9)";
+             break;
+           case 2:
+             current_color = "rgba(100,150,195,0.9)";
+             break; 
+           default:
+             break;
+          }
+         background_fill_colors.push(current_color);
+       }
+       background_fill_color = background_fill_colors;
+     }
+   }
+
    var dataStruct = {
      labels: label_array,
      datasets: [
@@ -316,7 +343,7 @@ function processDataDraw( input_json ) {
          fill: true,
          fillColor: "rgba(0,0,125,0.5)",
          borderColor: this.chart_border_color,
-         backgroundColor: this.chart_fill_color,
+         backgroundColor: background_fill_color,
          pointStyle: "rectRot",
          pointRadius: 5,
          pointBackgroundColor: "rgba(40,200,170,0.9)",

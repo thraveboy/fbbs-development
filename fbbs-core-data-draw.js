@@ -1,7 +1,8 @@
+
 var fbbsGlobalCharInstance = null;
 
 function FBBSDataDraw (ctx, title = "", type = "value_label") {
-  this.ctx = ctx;
+  this.ctx = ctx.getContext("2d");
   this.title = title;
   this.type = type;
   this.xaxis_type = "category";
@@ -16,21 +17,17 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.ctx.width = 1280;
   this.ctx.height = 720;
   this.ornate = true;
-  var chart_elem = document.getElementById("dashChart");
+  var chart_elem = this.ctx;
   var chart_x_max = chart_elem.width;
 
-  var gradient = chart_elem.getContext("2d").createLinearGradient(0,0, 
-                                                                  chart_x_max,
-                                                                  0);
+  var gradient = chart_elem.createLinearGradient(0,0, chart_x_max, 0);
   gradient.addColorStop("1.0","white");
   gradient.addColorStop("0.5","blue");
   gradient.addColorStop("0.25","cyan");
   gradient.addColorStop("0.15","yellow");
   gradient.addColorStop("0.0","white");
 
-  var gradient2 = chart_elem.getContext("2d").createLinearGradient(0,0, 
-                                                                   chart_x_max,
-                                                                   0);
+  var gradient2 = chart_elem.createLinearGradient(0,0, chart_x_max, 0);
   gradient2.addColorStop("1.0","rgba(250,250,250,0.6)");
   gradient2.addColorStop("0.5","rgba(0,0,250,0.15)");
   gradient2.addColorStop("0.25","rgba(0,250,250,0.2)");
@@ -338,8 +335,8 @@ function processDataDraw( input_json ) {
   var label_descent_size = this.label_descent_size;
 
   var chart_options = {
-           responsive: false,
-           maintainAspectRatio: false,
+           responsive: true,
+           maintainAspectRatio: true,
            animation: {
                duration: 10,
                onComplete: function () {

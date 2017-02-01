@@ -7,8 +7,8 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.xaxis_type = "category";
   this.chart_type = "line";
   this.label_type = "descent";
-  this.label_font_size = "20pt";
-  this.label_descent_size = 50;
+  this.label_font_size = "10pt";
+  this.label_descent_size = 25;
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
@@ -338,8 +338,8 @@ function processDataDraw( input_json ) {
   var label_descent_size = this.label_descent_size;
 
   var chart_options = {
-           responsive: true,
-           maintainAspectRatio: true,
+           responsive: false,
+           maintainAspectRatio: false,
            animation: {
                duration: 10,
                onComplete: function () {
@@ -402,10 +402,12 @@ function processDataDraw( input_json ) {
                                }
                                ctx.fillStyle="rgba(3,13,29,0.81)";
                                ctx.fillRect(current_x+10, current_y-15,
-                                            25+text_wid_pix.width, 42);
+                                            25+text_wid_pix.width, 
+                                            label_descent_size-5);
                                ctx.strokeStyle="rgba(150,250,50,0.2)";
                                ctx.rect(current_x+5, current_y-15,
-                                        25+text_wid_pix.width, 32);
+                                        25+text_wid_pix.width, 
+                                        label_descent_size-8);
                                ctx.stroke();
 
                                ctx.fillStyle=label_text_color;
@@ -474,8 +476,6 @@ function processDataDraw( input_json ) {
   var old_graph = null; 
   if (fbbsGlobalCharInstance != null) {
     old_graph = fbbsGlobalCharInstance;
-    old_graph.destroy();
-    old_graph = null;
   }
   var new_graph =  new Chart(this.ctx, {
       type: "bar",
@@ -485,6 +485,10 @@ function processDataDraw( input_json ) {
     });
   fbbsGlobalCharInstance = new_graph;
 
+  if (old_graph != null) {
+    old_graph.destroy();
+    old_graph = null;
+  }
   document.getElementById("dash").innerHTML = 
     "<span class=\"data_output\">" + dashHtml + "</span>";
 }

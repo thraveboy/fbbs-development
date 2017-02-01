@@ -1,6 +1,5 @@
 body, div, span, form, input, #board_info, #dash {
     font-family: monospace; 
-    font-size: xx-large;
     background-color: black;
     color: green;
 }
@@ -23,11 +22,17 @@ span.data_output {
     font-size: 8pt; 
 }
 
-input[type=submit] {
+input[type=submit], input#launch_command {
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: blue;
+    outline-width: 1px;
+    outline-width-left: 0px;
+    outline-width-right: 0px;
     outline-color: lime;
-    background-color: black;
-    font-family: monospace; 
-/*    font-size: 12pt; */
+    color: green;
 }
 
 p {

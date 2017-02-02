@@ -504,7 +504,7 @@ function processDataDraw( input_json ) {
     old_graph = null;
   }
 
-  var new_node_2d_context = this.ctx;
+  var new_node_2d_context = this.ctx_2d_context;
   var new_graph =  new Chart(new_node_2d_context, {
       type: "bar",
       data: dataStruct,

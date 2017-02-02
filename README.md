@@ -48,8 +48,8 @@ Change access to files apache, php, and sqlite can access them:
 
 sudo chmod a+wr *
 
-# To have 404 direct to custom_404 file change the add the following to the
-# apache config"  /etc/apache2/apache2.conf
+### To have 404 direct to custom_404 file change the add the following to the
+### apache config"  /etc/apache2/apache2.conf
 
 sudo nano /etc/apache2/apache2.conf
 
@@ -62,7 +62,7 @@ Now, restart the Apache web server to pick up the changes:
 sudo apache2ctl restart
 
 
-# If want to create DBs by hand, instead of using default dbs. (must also change access with chmod as in above).
+### If want to create DBs by hand, instead of using default dbs. (must also change access with chmod as in above).
 
 
 Create initial main public db:

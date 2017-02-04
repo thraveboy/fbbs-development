@@ -10,6 +10,8 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.label_type = "descent";
   this.label_font_size = "10pt";
   this.label_descent_size = 25;
+  this.title_font_size = 15;
+  this.title_padding = 40;
   this.chart_border_color = "rgba(200,0,100,0.9)";
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
@@ -333,23 +335,23 @@ function processDataDraw( input_json ) {
      }
    }
 
-   var dataStruct = {
-     labels: label_array,
-     datasets: [
-       {
-         type: this.chart_type,
-         label: this.title,
-         data : data_array,
-         fill: true,
-         fillColor: "rgba(0,0,125,0.5)",
-         borderColor: this.chart_border_color,
-         backgroundColor: background_fill_color,
-         pointStyle: "rectRot",
-         pointRadius: 5,
-         pointBackgroundColor: "rgba(40,200,170,0.9)",
-         borderWidth: 2
-       }
-     ]};
+  var dataStruct = {
+    labels: label_array,
+    datasets: [
+      {
+        label: this.title, 
+        type: this.chart_type,
+        data : data_array,
+        fill: true,
+        fillColor: "rgba(0,0,125,0.5)",
+        borderColor: this.chart_border_color,
+        backgroundColor: background_fill_color,
+        pointStyle: "rectRot",
+        pointRadius: 5,
+        pointBackgroundColor: "rgba(40,200,170,0.9)",
+        borderWidth: 2,
+      }],
+    };
 
   var label_text_color = this.label_text_color;
   var label_line_color = this.label_line_color;
@@ -360,6 +362,9 @@ function processDataDraw( input_json ) {
   var draw_ornate = this.ornate;
   var label_font_size = this.label_font_size;
   var label_descent_size = this.label_descent_size;
+  var title_text = this.title;
+  var title_font_size = this.title_font_size;
+  var title_padding = this.title_padding;
 
   var chart_options = {
            responsive: true,
@@ -397,7 +402,7 @@ function processDataDraw( input_json ) {
                                                     25);
                                if (label_type == "descent") {
                                  current_y = (chart_y_max)  - 
-                                             (chart_y_max - ((j+2) * 
+                                             (chart_y_max - ((j+3) * 
                                              label_descent_size));
                                }
                                text_wid_pix = ctx.measureText(label_array[j]);
@@ -436,7 +441,7 @@ function processDataDraw( input_json ) {
 
                                ctx.fillStyle=label_text_color;
                                ctx.fillText(label_array[j],
-                                            current_x+10, current_y-15);
+                                            current_x+10, current_y-3);
                                prev_x = p_obj._model.x + 1;
                                prev_y = p_obj._model.y * 2;
                                prev_point_x = p_obj._model.x;
@@ -447,14 +452,20 @@ function processDataDraw( input_json ) {
                        });
                      }
                    },
-               legend: {
+               title: { 
                    display: true,
+                   text: title_text,
+                   fontStyle: "bold",
+                   fontSize: title_font_size,
+                   padding: title_padding,
+                   fontColor: "rgba(190,250,220,0.9)",
+                 },
+               legend: {
+                   display: false,
                    position: 'top',
                    labels: {
                        showScaleLabels: true,
                        usePointStyle: true,
-                       fontColor: "rgba(190,250,220,0.9)",
-                       fontStyle: "bold"
                      },
                    reverse: false
                  },

@@ -96,7 +96,7 @@ function generateTimeValueDataObj (keyval_obj) {
     return_obj.min_timestamp = timestamp_to_milli;
   if (timestamp_to_milli > return_obj.max_timestamp)
     return_obj.max_timestamp = timestamp_to_milli;
-  return_obj.data = {x:  new_timestamp*1000, y: -new_value.length};
+  return_obj.data = {x:  new_timestamp*1000, y: new_value.length};
   var entry_time = parseInt(msgTimestamp(entry_obj));
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
@@ -339,7 +339,7 @@ function processDataDraw( input_json ) {
     labels: label_array,
     datasets: [
       {
-        label: this.title, 
+        label: this.title,
         type: this.chart_type,
         data : data_array,
         fill: true,
@@ -407,45 +407,47 @@ function processDataDraw( input_json ) {
                                }
                                text_wid_pix = ctx.measureText(label_array[j]);
                                current_x = p_obj._model.x;
-                               current_x = Math.min(current_x,
-                                   chart_x_max-(text_wid_pix.width));
-
-                               if (draw_ornate) {
-                                 ctx.beginPath();
-                                 ctx.moveTo(prev_x, prev_y);
-                                 ctx.lineTo(p_obj._model.x + 1,
-                                            p_obj._model.y * 2);
-                                 ctx.strokeStyle=label_line_color;
+                               if (current_x <
+                                   (chart_x_max+50)) {
+                                 current_x = Math.min(current_x,
+                                     chart_x_max-(text_wid_pix.width));
+                                 if (draw_ornate) {
+                                   ctx.beginPath();
+                                   ctx.moveTo(prev_x, prev_y);
+                                   ctx.lineTo(p_obj._model.x + 1,
+                                              p_obj._model.y * 2);
+                                   ctx.strokeStyle=label_line_color;
+                                   ctx.stroke();
+                                   ctx.moveTo(prev_point_x, prev_point_y);
+                                   ctx.lineTo(p_obj._model.x,
+                                              p_obj._model.y);
+                                   ctx.stroke();
+                                   ctx.moveTo(p_obj._model.x, p_obj._model.y);
+                                   ctx.lineTo(prev_x, prev_y);
+                                   ctx.stroke();
+                                   ctx.fillStyle=label_text_color;
+                                   ctx.fillRect(p_obj._model.x, p_obj._model.y,
+                                                1,
+                                                Math.abs(p_obj._model.y));
+                                 }
+                                 ctx.fillStyle="rgba(3,13,29,0.81)";
+                                 ctx.fillRect(current_x+10, current_y-15,
+                                              25+text_wid_pix.width, 
+                                              label_descent_size-5);
+                                 ctx.strokeStyle="rgba(150,250,50,0.2)";
+                                 ctx.rect(current_x+5, current_y-15,
+                                          25+text_wid_pix.width, 
+                                          label_descent_size-8);
                                  ctx.stroke();
-                                 ctx.moveTo(prev_point_x, prev_point_y);
-                                 ctx.lineTo(p_obj._model.x,
-                                            p_obj._model.y);
-                                 ctx.stroke();
-                                 ctx.moveTo(p_obj._model.x, p_obj._model.y);
-                                 ctx.lineTo(prev_x, prev_y);
-                                 ctx.stroke();
+  
                                  ctx.fillStyle=label_text_color;
-                                 ctx.fillRect(p_obj._model.x, p_obj._model.y,
-                                              1,
-                                              Math.abs(p_obj._model.y));
+                                 ctx.fillText(label_array[j],
+                                              current_x+10, current_y-3);
+                                 prev_x = p_obj._model.x + 1;
+                                 prev_y = p_obj._model.y * 2;
+                                 prev_point_x = p_obj._model.x;
+                                 prev_point_y = p_obj._model.y;
                                }
-                               ctx.fillStyle="rgba(3,13,29,0.81)";
-                               ctx.fillRect(current_x+10, current_y-15,
-                                            25+text_wid_pix.width, 
-                                            label_descent_size-5);
-                               ctx.strokeStyle="rgba(150,250,50,0.2)";
-                               ctx.rect(current_x+5, current_y-15,
-                                        25+text_wid_pix.width, 
-                                        label_descent_size-8);
-                               ctx.stroke();
-
-                               ctx.fillStyle=label_text_color;
-                               ctx.fillText(label_array[j],
-                                            current_x+10, current_y-3);
-                               prev_x = p_obj._model.x + 1;
-                               prev_y = p_obj._model.y * 2;
-                               prev_point_x = p_obj._model.x;
-                               prev_point_y = p_obj._model.y;
                                j++;
                              });
                          });
@@ -496,12 +498,13 @@ function processDataDraw( input_json ) {
                     display: false,
                     position: "right",
                     gridLines: {
-                        display: false,
+                        display: true,
                         lineWidth: 3,
                       },
                     ticks: {
                       fontColor: "rgba(50,50,0,0.3)",
-                      fontFamily: "monospace"
+                      fontFamily: "monospace",
+                      min: 0
                     },
                   }]
                 }
@@ -519,7 +522,6 @@ function processDataDraw( input_json ) {
   var new_graph =  new Chart(new_node_2d_context, {
       type: "bar",
       data: dataStruct,
-      labels: label_array,
       options: chart_options
     });
   fbbsGlobalCharInstance = new_graph;

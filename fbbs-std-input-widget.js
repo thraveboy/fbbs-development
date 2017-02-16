@@ -28,7 +28,7 @@ function FBBSStdCmdLine(props) {
     React.createElement(FBBSStdInputWidget, { label: ": command ::: ", id: "launch_command",
       onClick: LaunchCommand }),
     React.createElement(FBBSStdInputWidget, { label: ": board name: ", id: "board_name",
-      onClick: "" }),
+      onClick: SwitchBoard }),
     React.createElement(FBBSStdInputWidget, { label: ": post data : ", id: "post_data",
       onClick: PostData }),
     React.createElement(FBBSStdInputWidget, { label: ": read data : ", id: "read_data",
@@ -58,7 +58,7 @@ function PostData() {
 
   xhttp_dashinfo.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      updateDash();
+      SwitchBoard();
     }
   };
 
@@ -103,7 +103,7 @@ function ReadData() {
         }
         var entry_time = parseInt(msgTimestamp(entry_obj));
         var timestamp_diff = entry_time - current_time;
-        var new_data_entry = Math.round(timestamp_diff / 60 * 10) / 10; /* In minutes */
+        var new_data_entry = Math.round(timestamp_diff / 60 * 10) / 10; // in minutes
         var entry_output = msgValue(entry_obj) + " [minsago(" + new_data_entry + "]";
 
         document.getElementById("displaymsg").innerHTML += entry_output + "<br>";
@@ -117,6 +117,18 @@ function ReadData() {
   xhttp_mdashinfo.send("command=" + dashName + " @" + msgId);
 
   return false;
+}
+
+function getURLWithoutParams() {
+  return location.pathname;
+}
+
+function SwitchBoard() {
+  var dashName = document.getElementById("board_name").value;
+  if (dashName) {
+    showDash(dashName);
+    history.pushState({}, '', getURLWithoutParams() + '?command=' + dashName);
+  }
 }
 
 ReactDOM.render(React.createElement(FBBSStdCmdLine, null), document.getElementById('reacting'));

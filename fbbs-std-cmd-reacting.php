@@ -53,39 +53,7 @@ if (prev_cmd_val) {
   document.getElementById("board_name").value = prev_cmd_val;
 }
 
-function getURLWithoutParams() {
-  return location.pathname;
-}
-
-function updateDash(addCommandToUrl = false ) {
-  var dashName = document.getElementById("board_name").value;
-  if (dashName) {
-    showDash(dashName);
-    if (addCommandToUrl) {
-      history.pushState({}, '',
-                        getURLWithoutParams() + '?command=' + dashName);
-    }
-  }
-}
-
-
-function captureFormEnter(e) {
-  if (e.preventDefault) e.preventDefault();
-
-  updateDash(true);
-
-  return false;
-}
-
-var formElement = document.getElementById('command_form');
-if (formElement.attachEvent) {
-  formElement.attachEvent("submit", captureFormEnter);
-}
-else {
-  formElement.addEventListener("submit", captureFormEnter);
-}
-
-var dashUpdater = setInterval(updateDash, 5000);
+var dashUpdater = setInterval(SwitchBoard, 5000);
 
 </script>
 

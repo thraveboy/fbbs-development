@@ -33,6 +33,10 @@
 
   $username = authorize_user();
 
+  echo '<div id="username" hidden>';
+  print($username);
+  echo '</div>';
+
   $lastauth = last_auth_user();
 
   require_once 'fbbs-std-cmd-reacting.php';

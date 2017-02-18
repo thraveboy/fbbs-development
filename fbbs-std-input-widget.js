@@ -1,5 +1,3 @@
-"use strict";
-
 function FBBSStdInputWidget(props) {
   var form_id = props.id + "_form";
   var on_click = LaunchCommand;
@@ -65,8 +63,12 @@ function PostData() {
   xhttp_dashinfo.open("POST", "fbbs-api.php", true);
   xhttp_dashinfo.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   var data = document.getElementById("post_data");
+  var username_elem = document.getElementById("username");
   if (data && data.value) {
-    var curr_username = '[' + "<?php echo $username ?>" + ']';
+    var curr_username = '[]';
+    if (username_elem && username_elem.innerHTML) {
+      curr_username = '[' + username_elem.innerHTML + ']';
+    }
     var commandString = "command=" + dashName + " " + data.value + " " + curr_username;
     xhttp_dashinfo.send(commandString);
     document.getElementById("post_data").value = "";
@@ -103,7 +105,7 @@ function ReadData() {
         }
         var entry_time = parseInt(msgTimestamp(entry_obj));
         var timestamp_diff = entry_time - current_time;
-        var new_data_entry = Math.round(timestamp_diff / 60 * 10) / 10; // in minutes
+        var new_data_entry = Math.round(timestamp_diff / 60 * 10) / 10; // In minutes
         var entry_output = msgValue(entry_obj) + " [minsago(" + new_data_entry + "]";
 
         document.getElementById("displaymsg").innerHTML += entry_output + "<br>";
@@ -132,3 +134,4 @@ function SwitchBoard() {
 }
 
 ReactDOM.render(React.createElement(FBBSStdCmdLine, null), document.getElementById('reacting'));
+

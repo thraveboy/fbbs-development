@@ -61,8 +61,12 @@ function PostData() {
   xhttp_dashinfo.setRequestHeader("Content-type",
                                   "application/x-www-form-urlencoded");
   var data = document.getElementById("post_data");
+  var username_elem = document.getElementById("username");
   if (data && data.value) {
-    var curr_username = '[' + "<?php echo $username ?>" + ']';
+    var curr_username = '[]';
+    if (username_elem && username_elem.innerHTML) {
+      curr_username = '[' + username_elem.innerHTML + ']';
+    }
     var commandString = "command="+dashName+" "+data.value+" "+curr_username;
     xhttp_dashinfo.send(commandString);
     document.getElementById("post_data").value = "";

@@ -5,12 +5,12 @@ function FBBSStdInputWidget(props)  {
     on_click = props.onClick;
   }
   return <div className="fbbs_std_in_widget">
-      <form method="post" id={form_id} >
+      <form id={form_id}>
         {props.label}
-        <input type="text" id={props.id} size="10" />
+        <input type="text" id={props.id} size="10" onClick={on_click}/>
         &nbsp;
-        <input type="submit" value="<=enter|" size="7"
-           onClick={on_click} />
+        <input type="button" value="<=enter|" size="7"
+          onClick={on_click} />
       </form>
     </div>;
 }

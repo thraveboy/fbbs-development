@@ -9,11 +9,11 @@ function FBBSStdInputWidget(props) {
     { className: "fbbs_std_in_widget" },
     React.createElement(
       "form",
-      { method: "post", id: form_id },
+      { id: form_id },
       props.label,
-      React.createElement("input", { type: "text", id: props.id, size: "10" }),
+      React.createElement("input", { type: "text", id: props.id, size: "10", onClick: on_click }),
       "\xA0",
-      React.createElement("input", { type: "submit", value: "<=enter|", size: "7",
+      React.createElement("input", { type: "button", value: "<=enter|", size: "7",
         onClick: on_click })
     )
   );

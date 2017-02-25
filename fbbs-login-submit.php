@@ -2,11 +2,11 @@
 <html>
 <head>
 <style>
+<style>
 body, input {
     font-family: monospace;
-    font-size: xx-large;
-    background-color: blue;
-    color: cyan;
+    background-color: black;
+    color: green;
 }
 
 input {
@@ -14,11 +14,21 @@ input {
     border-bottom-width: 1px;
     border-left-width: 0px;
     border-right-width: 0px;
-    border-color: cyan;
+    border-color: green;
     outline-width: 1px;
     outline-width-left: 0px;
     outline-width-right: 0px;
-    outline-color: cyan;
+    outline-color: green;
+    color: green;
+}
+
+input[type=submit] {
+    outline-color: green;
+    background-color: black;
+}
+
+p {
+  white-space: nowrap;
 }
 
 </style>

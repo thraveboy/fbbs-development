@@ -88,7 +88,7 @@
   if (!empty($usernamepost) && !empty($authtokenpost) &&
       !empty($retrievedtoken)) {
     if (!password_verify($authtokenpost, $retrievedtoken)) {
-      $outputObject->append("error: ". "auth token does not match");
+      $outputObject->append("error: " . "auth token does not match");
       $outputObject->send();
       exit;
     }
@@ -98,8 +98,39 @@
       !empty($retrievedpassword)) {
     $passwordposthashed = password_hash($passwordpost, PASSWORD_DEFAULT);
     if (!password_verify($passwordpost, $retrievedpassword)) {
-      
+      $outputObject->append("error: " . "password does not match");
+      $outputObject->send();
+      exit;
     }
+  }
+
+  if (!empty($usernamepost) && !empty($passwordpost) &&
+      empty($retrievedpassword) && empty($retrievedusername)) {
+    $passwordhashed = password_hash($passwordpost, PASSWORD_DEFAULT);
+    $request_time = time();
+    $create_query = 'INSERT INTO users (username, password, timestamp) ' .
+                    'VALUES ("'. $cleanusername . '", "' .
+                    $passwordhashed . '", "'. $request_time . '")';
+    $db->exec($create_query);
+    $outputObject->append("usercreated: " . $usernamepost);
+    $outputObject->send();
+    exit;
+  }
+
+  if (!empty($usernamepost) && !empty($passwordpost) &&
+      !empty($retrievedpassword) && !empty($retrievedusername)) {
+
+    $auth_token = bin2hex(openssl_random_pseudo_bytes(16));
+    $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
+    $auth_insert_query = 'REPLACE INTO auth_tokens ' .
+                         '(username, token, expire, timestamp) ' .
+                         'VALUES ("' . $retrievedusername . '", "'.
+                         $auth_encode . '", "", "' . $request_time .
+                           '")';
+    $db->exec($auth_insert_query);
+    $outputObject->append("token: " . $auth_token);
+    $outputObject->send();
+    exit;
   }
 
   echo 'api' . "\n";

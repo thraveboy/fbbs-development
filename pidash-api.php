@@ -6,12 +6,8 @@
   $passwordpost = $_POST["password"];
   $authtokenpost = $_POST["token"];
 
-  echo 'post username' . $usernamepost . "\n";
-  echo 'post password' . $passwordpost . "\n";
-  echo 'post token' . $authtokenpost . "\n";
-
   // Open user FDB is the object for checking user database credentials.
-  class FDB extends SQLite3
+  class apiFDB extends SQLite3
   {
     function __construct()
     {
@@ -20,7 +16,7 @@
   }
 
   // JSON encoder for returning data
-  class jsonEncoder
+  class apiJsonEncoder
   {
     private $_output_string = "";
 
@@ -35,10 +31,10 @@
     }
   }
 
-  $outputObject = new jsonEncoder();
+  $outputObject = new apiJsonEncoder();
 
   // Open user database if error, then post error and exit
-  $db = new FDB();
+  $db = new apiFDB();
   if (!$db) {
     $outputObject->append("error: " . $db->lastErrorMsg());
     $outputObject->send();
@@ -59,10 +55,6 @@
     if ($user_info_array) {
       $retrievedusername = $user_info_array["username"];
       $retrievedpassword = $user_info_array["password"];
-      echo 'username:' . $retrievedusername;
-      echo "\n";
-      echo 'password:' . $retrievedpassword;
-      echo "\n";
     }
     $auth_query = 'SELECT token FROM auth_tokens where username = "' .
                   $cleanusername . '"';
@@ -71,8 +63,6 @@
       $auth_array = $auth_result->fetchArray(SQLITE3_ASSOC);
       $retrievedtoken = $auth_array['token'];
     }
-    echo 'token:' . $retrievedtoken;
-    echo "\n";
   }
   // Check to see if username and auth_token passed, and if correct.
   if (empty($usernamepost)) {
@@ -142,9 +132,7 @@
       exit;
     }
     $_COOKIE['username'] = $cleanusername;
-
-    require_once 'fbbs-api.php';
-    $outputObject->send();
+    $db->close();
+    include 'fbbs-api.php';
   }
-  echo 'api' . "\n";
 ?>

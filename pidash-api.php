@@ -1,10 +1,10 @@
 <?php
-  $_LOCAL_API_CALLS = 1;
+  $_LOCAL_API_CALLS = 0;
   $_COOKIE['username'] = '';
 
   $usernamepost = $_POST["username"];
   $passwordpost = $_POST["password"];
-  $authtokenpost = $_POST["auth_token"];
+  $authtokenpost = $_POST["token"];
 
   echo 'post username' . $usernamepost . "\n";
   echo 'post password' . $passwordpost . "\n";
@@ -49,30 +49,32 @@
   $cleanusername = $db->escapeString($usernamepost);
 
   // Check to see if username already exists
+  $userfound = FALSE;
   $user_info_query = 'SELECT * FROM "users" WHERE username = "' .
                       $cleanusername . '" ORDER BY timestamp DESC LIMIT 1';
   $results_user_info = $db->query($user_info_query);
-  $userfound = FALSE;
 
   if (!empty($results_user_info)) {
     $user_info_array = $results_user_info->fetchArray(SQLITE3_ASSOC);
     if ($user_info_array) {
       $retrievedusername = $user_info_array["username"];
       $retrievedpassword = $user_info_array["password"];
-      $retrievedtoken = $user_info_array["token"];
-      $retreivedtokenexpire = $user_info_array["expire"];
       echo 'username:' . $retrievedusername;
       echo "\n";
       echo 'password:' . $retrievedpassword;
       echo "\n";
-      echo 'token:' . $retrievedtoken;
-      echo "\n";
-      echo 'token expire:' . $retrievedtokenexpire;
-      echo "\n";
     }
+    $auth_query = 'SELECT token FROM auth_tokens where username = "' .
+                  $cleanusername . '"';
+    $auth_result = $db->query($auth_query);
+    if (!empty($auth_result)) {
+      $auth_array = $auth_result->fetchArray(SQLITE3_ASSOC);
+      $retrievedtoken = $auth_array['token'];
+    }
+    echo 'token:' . $retrievedtoken;
+    echo "\n";
   }
   // Check to see if username and auth_token passed, and if correct.
-
   if (empty($usernamepost)) {
     $outputObject->append("error: " . "no username specified");
     $outputObject->send();
@@ -117,7 +119,7 @@
     exit;
   }
 
-  if (!empty($usernamepost) && !empty($passwordpost) &&
+   if (!empty($usernamepost) && !empty($passwordpost) &&
       !empty($retrievedpassword) && !empty($retrievedusername)) {
 
     $auth_token = bin2hex(openssl_random_pseudo_bytes(16));
@@ -133,5 +135,16 @@
     exit;
   }
 
+  if (!empty($usernamepost) && !empty($authtokenpost)) {
+    if (!password_verify($authtokenpost, $retrievedtoken)) {
+      $outputObject->append("error: " . "auth token incorrect");
+      $outputObject->send();
+      exit;
+    }
+    $_COOKIE['username'] = $cleanusername;
+
+    require_once 'fbbs-api.php';
+    $outputObject->send();
+  }
   echo 'api' . "\n";
 ?>

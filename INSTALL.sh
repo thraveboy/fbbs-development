@@ -10,7 +10,7 @@ sudo apt-get install php5-sqlite -y
 echo 'sudo apt-get install sqlite3'
 sudo apt-get install sqlite3
 echo 'cp * /var/www/html'
-cp * /var/www/html
+sudo cp * /var/www/html
 echo 'sudo chmod a+wr /var/www/html/*'
 sudo chmod a+wr /var/www/html/*
 

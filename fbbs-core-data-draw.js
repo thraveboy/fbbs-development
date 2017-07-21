@@ -187,6 +187,7 @@ function generateValueHeightLabelDataObj (keyval_obj) {
   var entry_time = parseInt(msgTimestamp(entry_obj));
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
+  return_obj.label += "(" + new_timediff + ":minsago)";
   return_obj.html = "|@" + new_id + "|minsago=" + new_timediff + ")-=> " +
                     new_value + "<br>";
   return return_obj;

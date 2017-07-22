@@ -36,7 +36,7 @@
   // Open user database if error, then post error and exit
   $db = new apiFDB();
   if (!$db) {
-    $outputObject->append("error: " . $db->lastErrorMsg());
+    $outputObject->append('"error": "' . $db->lastErrorMsg()) . '"';
     $outputObject->send();
     exit;
   }
@@ -66,13 +66,13 @@
   }
   // Check to see if username and auth_token passed, and if correct.
   if (empty($usernamepost)) {
-    $outputObject->append("error: " . "no username specified");
+    $outputObject->append('"error": "' . "no username specified" . '"');
     $outputObject->send();
     exit;
   }
 
   if (empty($authtokenpost) && empty($passwordpost)) {
-    $outputObject->append("error: ". "no password or token specified");
+    $outputObject->append('"error": "' . "no password or token specified".'"');
     $outputObject->send();
     exit;
   }
@@ -80,7 +80,7 @@
   if (!empty($usernamepost) && !empty($authtokenpost) &&
       !empty($retrievedtoken)) {
     if (!password_verify($authtokenpost, $retrievedtoken)) {
-      $outputObject->append("error: " . "auth token does not match");
+      $outputObject->append('"error": "' . "auth token does not match".'"');
       $outputObject->send();
       exit;
     }
@@ -90,7 +90,7 @@
       !empty($retrievedpassword)) {
     $passwordposthashed = password_hash($passwordpost, PASSWORD_DEFAULT);
     if (!password_verify($passwordpost, $retrievedpassword)) {
-      $outputObject->append("error: " . "password does not match");
+      $outputObject->append('"error": "' . "password does not match".'"');
       $outputObject->send();
       exit;
     }
@@ -104,7 +104,7 @@
                     'VALUES ("'. $cleanusername . '", "' .
                     $passwordhashed . '", "'. $request_time . '")';
     $db->exec($create_query);
-    $outputObject->append("usercreated: " . $usernamepost);
+    $outputObject->append('"user_created": "' . $usernamepost . '"');
     $outputObject->send();
     exit;
   }
@@ -120,14 +120,14 @@
                          $auth_encode . '", "", "' . $request_time .
                            '")';
     $db->exec($auth_insert_query);
-    $outputObject->append("token: " . $auth_token);
+    $outputObject->append('"token": "' . $auth_token . '"');
     $outputObject->send();
     exit;
   }
 
   if (!empty($usernamepost) && !empty($authtokenpost)) {
     if (!password_verify($authtokenpost, $retrievedtoken)) {
-      $outputObject->append("error: " . "auth token incorrect");
+      $outputObject->append('"error": "' . "auth token incorrect" . '"');
       $outputObject->send();
       exit;
     }

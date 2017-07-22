@@ -1,4 +1,5 @@
 import requests
+import json
 
 class PiDashAPI:
     """Class object for interacting with PiDash API"""
@@ -14,7 +15,12 @@ class PiDashAPI:
         token_request = requests.post(self.host, data={'username': self.username, 'password': self.password})
         print(token_request.status_code, token_request.reason)
         print(token_request.text)
-api_test_obj = PiDashAPI("http://localhost/pidash-api.php", "test_user", "test_password")
+        json_decoder = json.JSONDecoder()
+        decoded_json = json_decoder.decode(token_request.text)
+        if "token" in decoded_json:
+          print(decoded_json["token"])
+
+api_test_obj = PiDashAPI("http://localhost/pidash-api.php", "test1_user", "test1_password")
 
 print api_test_obj.username
 print api_test_obj.password

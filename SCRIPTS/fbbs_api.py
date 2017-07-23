@@ -2,7 +2,7 @@ import requests
 import json
 import sys
 
-class PiDashAPI:
+class FbbsApi:
     """Class object for interacting with PiDash API"""
     def __init__(self, in_host="http://localhost/pidash-api.php", in_username="SysOp", in_password="sysop", in_token=""):
         self.host = in_host
@@ -25,7 +25,7 @@ class PiDashAPI:
             print(send_command.text)
 
 if (len(sys.argv) > 1):
-    api_test_obj = PiDashAPI()
+    api_test_obj = FbbsApi()
     print('command:' + ' '.join(sys.argv[1:]))
     api_test_obj.set_command(' '.join(sys.argv[1:]))
     api_test_obj.send()

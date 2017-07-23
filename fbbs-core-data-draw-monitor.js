@@ -10,6 +10,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.label_type = "descent";
   this.label_font_size = "6pt";
   this.label_descent_size = 25;
+  this.legend_font_size = "6pt";
   this.title_font_size = 15;
   this.title_padding = 20;
   this.chart_border_color = "rgba(200,0,100,0.9)";
@@ -53,12 +54,13 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.generateDataObj = generateValueHeightLabelDataObj;
     this.xaxis_type = "category";
     this.label_type = "point";
+    this.xaxis_display = true;
     this.ornate = false;
   }
   if (type == "value_height_label_bar") {
     this.generateDataObj = generateValueHeightLabelDataObj;
     this.xaxis_type = "category";
-    this.xaxis_display = false;
+    this.xaxis_display = true;
     this.label_type = "point";
     this.chart_type = "bar";
     this.ornate = false;
@@ -362,6 +364,7 @@ function processDataDraw( input_json ) {
   var draw_ornate = this.ornate;
   var label_font_size = this.label_font_size;
   var label_descent_size = this.label_descent_size;
+  var legend_font_size = this.legend_font_size;
   var title_text = this.title;
   var title_font_size = this.title_font_size;
   var title_padding = this.title_padding;
@@ -465,6 +468,7 @@ function processDataDraw( input_json ) {
                legend: {
                    display: false,
                    position: 'top',
+                   fontSize: legend_font_size,
                    labels: {
                        showScaleLabels: true,
                        usePointStyle: true,
@@ -486,8 +490,8 @@ function processDataDraw( input_json ) {
                           offsetGridLines: false
                         },
                       position: "bottom",
+                      fontSize: legend_font_size,
                       ticks: {
-                        fontSize: 12,
                         fontColor: "rgba(0,250,0,0.9)",
                         fontFamily: "monospace",
                         mirror: false,

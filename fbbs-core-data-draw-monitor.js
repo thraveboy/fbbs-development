@@ -52,7 +52,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   }
   if (type == "value_height_label") {
     this.generateDataObj = generateValueHeightLabelDataObj;
-    this.xaxis_type = "category";
+    this.xaxis_type = "time";
     this.label_type = "point";
     this.xaxis_display = true;
     this.ornate = false;
@@ -158,7 +158,7 @@ function generateValueHeightLabelDataObj (keyval_obj) {
       label: "", 
       html: "",
       min_timestamp: current_time,
-      max_timestamp: current_time
+      max_timestamp: 0
   };
   var entry_obj = new Object();
  
@@ -178,10 +178,10 @@ function generateValueHeightLabelDataObj (keyval_obj) {
       new_data = 0;
     }
   }
-  return_obj.data = new_data;
   var new_timestamp = msgTimestamp(entry_obj);
   return_obj.label = new_value;
   var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
+  return_obj.data = {x: timestamp_to_milli, y: new_data};
   if (timestamp_to_milli < return_obj.min_timestamp)
     return_obj.min_timestamp = timestamp_to_milli;
   if (timestamp_to_milli > return_obj.max_timestamp)
@@ -269,7 +269,7 @@ function processDataDraw( input_json ) {
   var label_array = [];
   var dashHtml = "";
   var min_timestamp = new Date().getTime();
-  var max_timestamp = min_timestamp;
+  var max_timestamp = 0;
   var current_time = min_timestamp/1000;
   var previous_time = current_time;
 
@@ -435,7 +435,7 @@ function processDataDraw( input_json ) {
                                  }
                                  ctx.fillStyle="rgba(3,13,29,0.81)";
                                  ctx.fillRect(current_x+10, current_y-15,
-                                              25+text_wid_pix.width, 
+                                              10+text_wid_pix.width, 
                                               label_descent_size-5);
                                  ctx.strokeStyle="rgba(150,250,50,0.2)";
                                  ctx.rect(current_x+5, current_y-15,

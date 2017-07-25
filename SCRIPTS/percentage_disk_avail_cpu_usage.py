@@ -8,6 +8,12 @@ print(total_space)
 percentage_free = int((float(avail_space) / float(total_space)) * 100.0)
 print(percentage_free)
 
-api_command_str = "python fbbs_api.py " + "monitor_" + hostname + "_avail_disk '" + str(percentage_free) + "%'
+api_command_str = "python fbbs_api.py " + "monitor_" + hostname + "_avail_disk '" + str(percentage_free) + "%'"
 print(api_command_str)
 fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)
+
+cpu_percentage = subprocess.check_output("top -bn1 | grep \"Cpu(s)\" | sed \"s/\\([0-9.]*\\) sy.*/\\1/\" | awk '{print 100 - $2}'", shell=True)
+print(cpu_percentage) 
+api_command_str = "python fbbs_api.py " + "monitor_"  + hostname + "_cpu '" + str(cpu_percentage) + "%'"
+fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)
+ 

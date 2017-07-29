@@ -217,7 +217,7 @@ else {
   formGetMsg.addEventListener("submit", captureGetMsgEnter);
 }
 
-var dashUpdater = setInterval(updateDash, 5000);
+var dashUpdater = setInterval(updateDash, 10000);
 
 </script>
 

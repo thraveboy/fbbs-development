@@ -17,8 +17,8 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
   this.xaxis_grid_color = "rgba(30,180,18,0.2)";
-  this.ctx_2d_context.width = 640;
-  this.ctx_2d_context.height = 360;
+  this.ctx_2d_context.width = 320;
+  this.ctx_2d_context.height = 180;
   this.ornate = true;
   var chart_elem = this.ctx_2d_context;
   var chart_x_max = chart_elem.width;
@@ -433,19 +433,6 @@ function processDataDraw( input_json ) {
                                                 1,
                                                 Math.abs(p_obj._model.y));
                                  }
-                                 ctx.fillStyle="rgba(3,13,29,0.81)";
-                                 ctx.fillRect(current_x+10, current_y-15,
-                                              10+text_wid_pix.width, 
-                                              label_descent_size-5);
-                                 ctx.strokeStyle="rgba(150,250,50,0.2)";
-                                 ctx.rect(current_x+5, current_y-15,
-                                          10+text_wid_pix.width, 
-                                          label_descent_size-8);
-                                 ctx.stroke();
-  
-                                 ctx.fillStyle=label_text_color;
-                                 ctx.fillText(label_array[j],
-                                              current_x+10, current_y-3);
                                  prev_x = p_obj._model.x + 1;
                                  prev_y = p_obj._model.y * 2;
                                  prev_point_x = p_obj._model.x;

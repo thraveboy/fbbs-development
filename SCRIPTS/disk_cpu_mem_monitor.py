@@ -8,7 +8,7 @@ print(total_space)
 percentage_free = int((float(avail_space) / float(total_space)) * 100.0)
 print(percentage_free)
 
-api_command_str = "python fbbs_api.py " + "monitor_" + hostname + "_avail_disk '" + str(percentage_free) + "%'"
+api_command_str = "python fbbs_api.py " + "monitor_" + hostname + "_diskfree '" + str(percentage_free) + "%'"
 print(api_command_str)
 fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)
 

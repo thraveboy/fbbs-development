@@ -44,11 +44,6 @@ id="form1">
 </form>
 <canvas id="dashChart"></canvas>
 <br>
-: <u>board info</u> : <span id="board_name"></span>
-<br>
-<br>
-<div id="board_info"></div>
-
 : <u>data</u> :
 <br>
 <br>

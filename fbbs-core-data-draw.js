@@ -16,8 +16,9 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.chart_fill_color = "rgba(150,20,200,0.6)";
   this.xaxis_display = false;
   this.xaxis_grid_color = "rgba(30,180,18,0.2)";
-  this.ctx_2d_context.width = 1280;
-  this.ctx_2d_context.height = 720;
+  this.yaxis_display = false;
+  this.ctx_2d_context.width = 640;
+  this.ctx_2d_context.height = 360;
   this.ornate = true;
   var chart_elem = this.ctx_2d_context;
   var chart_x_max = chart_elem.width;
@@ -46,6 +47,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.generateDataObj = generateValueTimeDataObj;
     this.xaxis_type = "time";
     this.xaxis_display = true;
+    this.yaxis_display = true;
     this.label_type = "point";
     this.ornate = false;
   }
@@ -127,19 +129,15 @@ function generateValueTimeDataObj (keyval_obj) {
 
   var splitted_new = new_value.split(" ");
   var new_timestamp = "";
-  if ((splitted_new != undefined) && (splitted_new[0] != undefined)) {
-    new_timestamp = moment(splitted_new[0]).unix();
-  } 
-  else {
-    new_timestamp = msgTimestamp(entry_obj);
-  }
+  new_timestamp = msgTimestamp(entry_obj);
   return_obj.label = new_value;
   var timestamp_to_milli = parseInt(new_timestamp,10)*1000;
   if (timestamp_to_milli < return_obj.min_timestamp)
     return_obj.min_timestamp = timestamp_to_milli;
   if (timestamp_to_milli > return_obj.max_timestamp)
     return_obj.max_timestamp = timestamp_to_milli;
-  return_obj.data = {x:  new_timestamp*1000, y: new_value.length};
+  var valuewocommas = new_value.replace(/\,/g,"");
+  return_obj.data = {x:  new_timestamp*1000, y: parseFloat(valuewocommas)};
   var entry_time = parseInt(msgTimestamp(entry_obj));
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
@@ -348,7 +346,7 @@ function processDataDraw( input_json ) {
         borderColor: this.chart_border_color,
         backgroundColor: background_fill_color,
         pointStyle: "rectRot",
-        pointRadius: 5,
+        pointRadius: 2,
         pointBackgroundColor: "rgba(40,200,170,0.9)",
         borderWidth: 2,
       }],
@@ -359,6 +357,7 @@ function processDataDraw( input_json ) {
   var label_type = this.label_type;
   var xaxis_type = this.xaxis_type;
   var xaxis_display = this.xaxis_display;
+  var yaxis_display = this.yaxis_display;
   var xaxis_grid_color = this.xaxis_grid_color;
   var draw_ornate = this.ornate;
   var label_font_size = this.label_font_size;
@@ -430,24 +429,24 @@ function processDataDraw( input_json ) {
                                    ctx.fillRect(p_obj._model.x, p_obj._model.y,
                                                 1,
                                                 Math.abs(p_obj._model.y));
-                                 }
-                                 ctx.fillStyle="rgba(3,13,29,0.81)";
-                                 ctx.fillRect(current_x+10, current_y-15,
-                                              25+text_wid_pix.width, 
-                                              label_descent_size-5);
-                                 ctx.strokeStyle="rgba(150,250,50,0.2)";
-                                 ctx.rect(current_x+5, current_y-15,
-                                          25+text_wid_pix.width, 
-                                          label_descent_size-8);
-                                 ctx.stroke();
+                                   ctx.fillStyle="rgba(3,13,29,0.81)";
+                                   ctx.fillRect(current_x+10, current_y-15,
+                                                25+text_wid_pix.width, 
+                                                label_descent_size-5);
+                                   ctx.strokeStyle="rgba(150,250,50,0.2)";
+                                   ctx.rect(current_x+5, current_y-15,
+                                            25+text_wid_pix.width, 
+                                            label_descent_size-8);
+                                   ctx.stroke();
   
-                                 ctx.fillStyle=label_text_color;
-                                 ctx.fillText(label_array[j],
-                                              current_x+10, current_y-3);
-                                 prev_x = p_obj._model.x + 1;
-                                 prev_y = p_obj._model.y * 2;
-                                 prev_point_x = p_obj._model.x;
-                                 prev_point_y = p_obj._model.y;
+                                   ctx.fillStyle=label_text_color;
+                                   ctx.fillText(label_array[j],
+                                                current_x+10, current_y-3);
+                                   prev_x = p_obj._model.x + 1;
+                                   prev_y = p_obj._model.y * 2;
+                                   prev_point_x = p_obj._model.x;
+                                   prev_point_y = p_obj._model.y;
+                                 }
                                }
                                j++;
                              });
@@ -496,14 +495,14 @@ function processDataDraw( input_json ) {
                       }
                   }],
                   yAxes: [{
-                    display: false,
-                    position: "right",
+                    display: yaxis_display,
+                    position: "left",
                     gridLines: {
                         display: true,
                         lineWidth: 3,
                       },
                     ticks: {
-                      fontColor: "rgba(50,50,0,0.3)",
+                      fontColor: "rgba(250,250,0,0.9)",
                       fontFamily: "monospace",
                       min: 0
                     },

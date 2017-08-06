@@ -1,3 +1,5 @@
+<canvas id="dashChart"></canvas>
+
 : Welcome, <?=$username?>.
 <br>
 : <b>f</b>ury <b>b</b>ulletin <b>b</b>oard <b>s</b>ystem (<b>fbbs</b>) :
@@ -49,8 +51,6 @@ id="form1">
 <br>
 <div id="board_info"></div>
 <br>
-<canvas id="dashChart"></canvas>
-
 : <u>data</u> :
 <br>
 <br>

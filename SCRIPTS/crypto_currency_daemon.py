@@ -10,7 +10,7 @@ while 1:
         print(ticker_value)
         ticker_values_in_array.append(string.split(ticker_value,' '))
     for ticker_value_in_array in ticker_values_in_array:
-        if ticker_value_in_array[0] == "Ticker:BTC":
+        if (ticker_value_in_array[0] == "Ticker:BTC") or (ticker_value_in_array[0] == "Ticker:BCC") or (ticker_value_in_array[0] == "Ticker:ETH"):
             ticker_value = str(ticker_value_in_array[1])
             api_command_str = "python fbbs_api.py " + str(ticker_value_in_array[0]) + " " + str(ticker_value)
             fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)

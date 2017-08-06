@@ -137,7 +137,7 @@ function generateValueTimeDataObj (keyval_obj) {
   if (timestamp_to_milli > return_obj.max_timestamp)
     return_obj.max_timestamp = timestamp_to_milli;
   var valuewocommas = new_value.replace(/\,/g,"");
-  return_obj.data = {x:  new_timestamp*1000, y: parseFloat(valuewocommas)};
+  return_obj.data = { x: moment.utc(new_timestamp*1000), y: parseFloat(valuewocommas)};
   var entry_time = parseInt(msgTimestamp(entry_obj));
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);

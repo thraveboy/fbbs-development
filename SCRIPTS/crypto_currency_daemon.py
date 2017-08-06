@@ -14,4 +14,4 @@ while 1:
             ticker_value = str(ticker_value_in_array[1])
             api_command_str = "python fbbs_api.py " + str(ticker_value_in_array[0]) + " " + str(ticker_value)
             fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)
-    time.sleep(10)
+    time.sleep(30)

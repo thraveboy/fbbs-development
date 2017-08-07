@@ -13,5 +13,7 @@ echo 'sudo cp * /var/www/html'
 sudo cp * /var/www/html
 echo 'sudo chmod a+wr /var/www/html/*'
 sudo chmod a+wrx /var/www/html/*
+echo 'sudo chmod a+wr /var/www/html/'
+sudo chmod a+wrx /var/www/html/
 echo 'sudo apache2ctl restart'
 sudo apache2ctl restart

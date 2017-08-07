@@ -5,7 +5,7 @@ import sys
 
 update_rate_mins = 5
 if (len(sys.argv) > 1):
-    update_rate_mins = float(sys.argv[1])
+    update_rate_mins = int(float(sys.argv[1]))
 
 while 1:
     ticker_values = subprocess.check_output('curl https://www.worldcoinindex.com/ | sed -f coin-scrap.sed | sed -f sed-clean.sed | grep Ticker', shell=True)

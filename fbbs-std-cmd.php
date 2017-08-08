@@ -15,7 +15,7 @@
 <FORM id="launch_command_form" ACTION="" METHOD="POST">
 <?php
   echo ': command: <INPUT TYPE="Text" VALUE="" ';
-  echo 'id="launch_command" NAME="launch_command" SIZE="12" autofocus>';
+  echo 'id="launch_command" NAME="launch_command" SIZE="12">';
 ?>
     <INPUT ID="submission" TYPE="Submit" Value="|/\enter/\|"
      onclick="launchCommand()">

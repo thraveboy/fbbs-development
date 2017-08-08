@@ -12,11 +12,13 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.label_descent_size = 25;
   this.title_font_size = 15;
   this.title_padding = 40;
-  this.chart_border_color = "rgba(200,0,100,0.9)";
-  this.chart_fill_color = "rgba(150,20,200,0.6)";
+  this.chart_border_color = "rgba(0,200,100,0.9)";
+  this.chart_fill_color = "rgba(50,50,200,0.9)";
   this.xaxis_display = false;
-  this.xaxis_grid_color = "rgba(30,180,18,0.2)";
+  this.xaxis_display_gridlines = true;
+  this.xaxis_grid_color = "rgba(180,18,180,0.5)";
   this.yaxis_display = false;
+  this.yaxis_grid_color = "rgba(230,230,18,0.6)";
   this.ctx_2d_context.width = 640;
   this.ctx_2d_context.height = 360;
   this.ornate = true;
@@ -37,7 +39,6 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   gradient2.addColorStop("0.15", "rgba(250,250,0,0.2)");
   gradient2.addColorStop("0.0","rgba(250,250,250,0.5)");
 
-  this.chart_fill_color= "rgba(100,25,225,0.6)";
   this.label_text_color = gradient;
   this.label_line_color = gradient2;
 
@@ -359,8 +360,10 @@ function processDataDraw( input_json ) {
   var label_type = this.label_type;
   var xaxis_type = this.xaxis_type;
   var xaxis_display = this.xaxis_display;
+  var xaxis_display_gridlines = this.xaxis_display_gridlines;
   var yaxis_display = this.yaxis_display;
   var xaxis_grid_color = this.xaxis_grid_color;
+  var yaxis_grid_color = this.yaxis_grid_color;
   var draw_ornate = this.ornate;
   var label_font_size = this.label_font_size;
   var label_descent_size = this.label_descent_size;
@@ -484,7 +487,7 @@ function processDataDraw( input_json ) {
                       gridLines: {
                           color: xaxis_grid_color,
                           borderDash: [5, 5],
-                          display: xaxis_display,
+                          display: xaxis_display_gridlines,
                           offsetGridLines: false
                         },
                       position: "bottom",
@@ -500,8 +503,9 @@ function processDataDraw( input_json ) {
                     display: yaxis_display,
                     position: "left",
                     gridLines: {
-                        display: true,
-                        lineWidth: 3,
+                        color: yaxis_grid_color,
+                        borderDash: [5, 5],
+                        display: true
                       },
                     ticks: {
                       fontColor: "rgba(250,250,0,0.9)",

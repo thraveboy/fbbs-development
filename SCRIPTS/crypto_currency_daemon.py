@@ -16,6 +16,9 @@ while 1:
         ticker_values_in_array.append(string.split(ticker_value,' '))
     for ticker_value_in_array in ticker_values_in_array:
         if (ticker_value_in_array[0] == "Ticker:BTC") or (ticker_value_in_array[0] == "Ticker:BCC") or (ticker_value_in_array[0] == "Ticker:ETH"):
+            api_command_str = "python fbbs_api.py '" + str(ticker_value_in_array[0]) + ":" + str(update_rate_mins) + "min'"
+            print(api_command_str)
+            fbbs_api_obj = subprocess.check_output(api_command_str, shell=True)
             ticker_value = str(ticker_value_in_array[1])
             api_command_str = "python fbbs_api.py '" + str(ticker_value_in_array[0]) + ":" + str(update_rate_mins) + "min' " + str(ticker_value)
             print(api_command_str)

@@ -11,7 +11,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.label_font_size = "10pt";
   this.label_descent_size = 25;
   this.title_font_size = 15;
-  this.title_padding = 40;
+  this.title_padding = 10;
   this.chart_border_color = "rgba(0,200,100,0.9)";
   this.chart_fill_color = "rgba(50,50,200,0.9)";
   this.xaxis_display = false;

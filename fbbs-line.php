@@ -35,6 +35,15 @@
 
   $lastauth = last_auth_user();
 
+  echo '<div id="graph_stats">';
+  echo '<b>';
+  echo '<u>High</u>: <span id="high_value"></span>&nbsp;';
+  echo '<u>Low</u>: <span id="low_value"></span>&nbsp;';
+  echo '<u>Current</u>: <span id="current_value"></span>&nbsp;';
+  echo '<u>Percent Change</u>: <span id="percentage_change"></span>';
+  echo '</b>';
+  echo '</div>';
+
   require_once 'fbbs-std-cmd.php';
 ?>
 

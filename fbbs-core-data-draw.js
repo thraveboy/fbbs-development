@@ -268,6 +268,13 @@ function processDataDraw( input_json ) {
   var data_array = [];
   var label_array = [];
   var dashHtml = "";
+  var data_process_type = this.type;
+  var graph_y_first_value = 0;
+  var graph_y_last_value = 0;
+  var graph_y_first_last_diff = 0.0; 
+  var graph_y_percentage_diff = 0.0; 
+  var graph_y_min_value = Number.MAX_VALUE;
+  var graph_y_max_value = -Number.MAX_VALUE;
   var min_timestamp = new Date().getTime();
   var max_timestamp = min_timestamp;
   var current_time = min_timestamp/1000;
@@ -295,7 +302,16 @@ function processDataDraw( input_json ) {
           });
       });
     var data_obj = dataProcessor(raw_obj);
-    data_array.push(data_obj.data);
+    var data_values = data_obj.data;
+    data_array.push(data_values);
+    if (data_process_type == "value_time") {
+      if (data_values.y > graph_y_max_value) {
+        graph_y_max_value = data_values.y;
+      }
+      if (data_values.y < graph_y_min_value) {
+        graph_y_min_value = data_values.y;
+      }
+    }
     label_array.push(data_obj.label);
     dashHtml += data_obj.html;
     if (data_obj.min_timestamp < min_timestamp) {
@@ -305,6 +321,16 @@ function processDataDraw( input_json ) {
       max_timestamp = data_obj.max_timestamp;
     }
    });
+
+   if ((data_array.length > 0) && (data_process_type == "value_time")) {
+     graph_y_last_value = data_array[0].y;
+     graph_y_first_value = data_array[data_array.length - 1].y;
+     graph_y_first_last_diff = graph_y_last_value - graph_y_first_value;
+     if (graph_y_first_value != 0) {
+       graph_y_percentage_diff = (graph_y_first_last_diff /
+                                 graph_y_first_value) * 100;
+     }
+   }
 
    var min_moment = moment(min_timestamp);
    var max_moment = moment(max_timestamp);
@@ -531,6 +557,14 @@ function processDataDraw( input_json ) {
       options: chart_options
     });
   fbbsGlobalCharInstance = new_graph;
+
+  if (data_process_type == "value_time") {
+    document.getElementById("current_value").textContent = graph_y_last_value;
+    document.getElementById("high_value").textContent = graph_y_max_value;
+    document.getElementById("low_value").textContent = graph_y_min_value;
+    document.getElementById("percentage_change").textContent = 
+      graph_y_percentage_diff;
+  }
 
   document.getElementById("dash").innerHTML = 
     "<span class=\"data_output\">" + dashHtml + "</span>";

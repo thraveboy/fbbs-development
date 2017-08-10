@@ -2,6 +2,7 @@ body, div, span, form, input, #board_info, #dash {
     font-family: monospace; 
     background-color: black;
     color: green;
+    font-size: large;
 }
 
 input {
@@ -19,7 +20,6 @@ input {
 
 span.data_output {
     font-family: monospace; 
-    font-size: 8pt; 
 }
 
 input[type=submit], input#launch_command {

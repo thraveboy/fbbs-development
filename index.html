@@ -6,6 +6,7 @@ body, input {
     font-family: monospace;
     background-color: black;
     color: green;
+    font-size: large;
 }
 
 input {

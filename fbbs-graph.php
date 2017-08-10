@@ -4,9 +4,9 @@
 <style>
 body, input {
     font-family: monospace;
-    font-size: xx-large;
     background-color: white;
     color: black;
+    font-size: large;
 }
 
 input {

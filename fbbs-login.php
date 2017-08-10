@@ -4,9 +4,9 @@
 <style>
 body, input {
     font-family: monospace;
-    font-size: small;
-    background-color: blue;
-    color: cyan;
+    background-color: black;
+    color: green;
+    font-size: large;
 }
 
 input {
@@ -14,16 +14,11 @@ input {
     border-bottom-width: 1px;
     border-left-width: 0px;
     border-right-width: 0px;
-    border-color: cyan;
+    border-color: green;
     outline-width: 1px;
     outline-width-left: 0px;
     outline-width-right: 0px;
-    outline-color: cyan;
-    color: cyan;
-}
-
-input[type=submit] {
-    background-color: blue;
+    outline-color: green;
 }
 
 </style>

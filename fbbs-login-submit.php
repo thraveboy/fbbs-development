@@ -2,11 +2,11 @@
 <html>
 <head>
 <style>
-<style>
 body, input {
     font-family: monospace;
     background-color: black;
     color: green;
+    font-size: large;
 }
 
 input {
@@ -19,16 +19,6 @@ input {
     outline-width-left: 0px;
     outline-width-right: 0px;
     outline-color: green;
-    color: green;
-}
-
-input[type=submit] {
-    outline-color: green;
-    background-color: black;
-}
-
-p {
-  white-space: nowrap;
 }
 
 </style>

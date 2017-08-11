@@ -104,7 +104,7 @@ echo "Connected to FBBSUSER successfully\n";
 $sql_user = "CREATE TABLE users (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 username VARCHAR(32) UNIQUE NOT NULL,
-password VARCHAR(32) NOT NULL,
+password VARCHAR(64) NOT NULL,
 timestamp TIMESTAMP
 )";
 
@@ -116,7 +116,7 @@ if ($conn_user->query($sql_user) == TRUE) {
 
 $sql_user = "CREATE TABLE auth_tokens (
 username VARCHAR(32) NOT NULL PRIMARY KEY,
-token VARCHAR(32) NOT NULL,
+token VARCHAR(64) NOT NULL,
 timestamp TIMESTAMP
 )";
 

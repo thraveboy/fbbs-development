@@ -53,7 +53,7 @@ echo "Connected successfully\n";
 // Create test table
 $sql = "CREATE TABLE test (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-ip VARCHAR(30) NOT NULL,
+ip VARCHAR(32) NOT NULL,
 value BLOB,
 timetamp TIMESTAMP
 )";

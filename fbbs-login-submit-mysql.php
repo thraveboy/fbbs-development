@@ -39,7 +39,7 @@ input {
     {
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
-      if ($this->connect_errno) {
+      if ($this->connect_error) {
           error_log("Failed to connect to FBBSUSER: " . $this->connect_error);
       }
     }
@@ -65,7 +65,7 @@ input {
 
     $db = new FDB();
     if(!$db){
-      echo $db->error;
+      echo "Can not connect to DB\n";
     }
     $cleanusername = $db->real_escape_string($usernamepost);
     $user_info_query = 'SELECT * FROM users WHERE username = "' .
@@ -84,7 +84,7 @@ input {
           echo 'token generated....<br>';
           $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
           $auth_insert_query = 'REPLACE INTO auth_tokens ' .
-                               '(username, token, expire) ' .
+                               '(username, token) ' .
                                'VALUES ("' . $retrievedusername . '", "'.
                                $auth_encode . '")';
           $db->query($auth_insert_query);

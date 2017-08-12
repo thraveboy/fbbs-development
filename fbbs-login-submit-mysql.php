@@ -65,7 +65,7 @@ input {
 
     $db = new FDB();
     if(!$db){
-      echo $db->error;;
+      echo $db->error;
     }
     $cleanusername = $db->real_escape_string($usernamepost);
     $user_info_query = 'SELECT * FROM users WHERE username = "' .

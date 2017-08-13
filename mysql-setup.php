@@ -81,7 +81,7 @@ $sql = "CREATE TABLE _help (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 ip VARCHAR(30) NOT NULL,
 value BLOB,
-timetamp TIMESTAMP
+timetamp BIGINT UNSIGNED
 )";
 
 if ($conn_private->query($sql) == TRUE) {
@@ -105,7 +105,7 @@ $sql_user = "CREATE TABLE users (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 username VARCHAR(32) UNIQUE NOT NULL,
 password VARCHAR(64) NOT NULL,
-timestamp TIMESTAMP
+timestamp BIGINT UNSIGNED
 )";
 
 if ($conn_user->query($sql_user) == TRUE) {
@@ -117,7 +117,7 @@ if ($conn_user->query($sql_user) == TRUE) {
 $sql_user = "CREATE TABLE auth_tokens (
 username VARCHAR(32) NOT NULL PRIMARY KEY,
 token VARCHAR(64) NOT NULL,
-timestamp TIMESTAMP
+timestamp BIGINT UNSIGNED
 )";
 
 if ($conn_user->query($sql_user) == TRUE) {

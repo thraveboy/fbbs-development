@@ -82,11 +82,12 @@ input {
           echo 'password matched...<br>';
           $auth_token = bin2hex(openssl_random_pseudo_bytes(16));
           echo 'token generated....<br>';
+          $request_time = time();
           $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
           $auth_insert_query = 'REPLACE INTO auth_tokens ' .
-                               '(username, token) ' .
+                               '(username, token, timestamp) ' .
                                'VALUES ("' . $retrievedusername . '", "'.
-                               $auth_encode . '")';
+                               $auth_encode . '", ' . $request_time . ')';
           $db->query($auth_insert_query);
           echo '<div id="username" style="visibility: hidden">';
           echo $cleanusername;
@@ -110,9 +111,9 @@ input {
       $passwordhashed = password_hash($passwordpost, PASSWORD_DEFAULT);
       if (password_verify($passwordagainpost, $passwordhashed)) {
          $request_time = time();
-         $create_query = 'INSERT INTO users (username, password) ' .
+         $create_query = 'INSERT INTO users (username, password, timestamp) ' .
                          'VALUES ("'. $cleanusername . '", "' .
-                         $passwordhashed . '")';
+                         $passwordhashed . '", ' . $request_time . ')';
          $db->query($create_query);
          echo 'created user account for ' . $cleanusername . '.....<br>';
       }

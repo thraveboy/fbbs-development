@@ -35,7 +35,7 @@
   {
     private $fbbs_servername = "localhost";
     private $fbbs_username = "root";
-    private $fbbs_password = "";
+    private $fbbs_password = "bbs";
     private $fbbs_database = "FBBS";
 
     function __construct()
@@ -51,7 +51,7 @@
   {
     private $fbbs_servername = "localhost";
     private $fbbs_username = "root";
-    private $fbbs_password = "";
+    private $fbbs_password = "bbs";
     private $fbbs_database = "FBBSPRIVATE";
 
     function __construct()

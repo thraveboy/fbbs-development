@@ -32,7 +32,7 @@ input {
   {
     private $fbbs_servername = "localhost";
     private $fbbs_username = "root";
-    private $fbbs_password = "";
+    private $fbbs_password = "bbs";
     private $fbbs_database = "FBBSUSER";
 
     function __construct()

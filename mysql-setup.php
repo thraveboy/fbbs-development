@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "bbs";
 $dbname = "FBBS";
 $dbname_user = "FBBSUSER";
 $dbname_private = "FBBSPRIVATE";

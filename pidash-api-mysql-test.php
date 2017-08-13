@@ -68,7 +68,7 @@
     $auth_query = 'SELECT token FROM auth_tokens where username = "' .
                   $cleanusername . '"';
     $auth_result = $db->query($auth_query);
-    if (!empty($auth_result)) {
+    if (!empty($auth_result) && ($auth_result->num_rows > 0)) {
       $auth_array = $auth_result->fetch_assoc();
       $retrievedtoken = $auth_array['token'];
     }
@@ -123,10 +123,11 @@
 
     $auth_token = bin2hex(openssl_random_pseudo_bytes(16));
     $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
+    $request_time = time();
     $auth_insert_query = 'REPLACE INTO auth_tokens ' .
                          '(username, token, expire, timestamp) ' .
                          'VALUES ("' . $retrievedusername . '", "'.
-                         $auth_encode . '", "", ' . $request_time .
+                         $auth_encode . '", 0, ' . $request_time .
                            ')';
     $db->query($auth_insert_query);
     $outputObject->append('"token": "' . $auth_token . '"');

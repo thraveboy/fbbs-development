@@ -70,10 +70,10 @@ input {
     $cleanusername = $db->real_escape_string($usernamepost);
     $user_info_query = 'SELECT * FROM users WHERE username = "' .
                         $cleanusername . '" ORDER BY timestamp DESC LIMIT 1';
-    echo "mysql query: " . $user_info_query . "\n";
+    error_log("mysql query: " . $user_info_query . "\n");
     $results_user_info = $db->query($user_info_query);
     $userfound = FALSE;
-    if ($results_user_info->num_rows != 0) {
+    if ((!empty($results_user_info)) && ($results_user_info->num_rows > 0)) {
       $user_info_array = $results_user_info->fetch_assoc();
       if ($user_info_array) {
         $retrievedusername = $user_info_array["username"];
@@ -85,9 +85,9 @@ input {
           $request_time = time();
           $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
           $auth_insert_query = 'REPLACE INTO auth_tokens ' .
-                               '(username, token, timestamp) ' .
+                               '(username, token, expire, timestamp) ' .
                                'VALUES ("' . $retrievedusername . '", "'.
-                               $auth_encode . '", ' . $request_time . ')';
+                               $auth_encode . '", 0, ' . $request_time . ')';
           $db->query($auth_insert_query);
           echo '<div id="username" style="visibility: hidden">';
           echo $cleanusername;

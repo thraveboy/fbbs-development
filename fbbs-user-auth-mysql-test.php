@@ -42,8 +42,9 @@
     if ($userauthorized) {
       $request_time = time();
       $auth_access_insert = 'INSERT INTO user_auth_log ' .
-                            '(username, token) VALUES ' .
-                            '("' . $username . '", "' . $auth_encoded . '")';
+                            '(username, token, timestamp) VALUES ' .
+                            '("' . $username . '", "' . $auth_encoded . '", '
+                            . $request_time .')';
       $fdbuser->query($auth_access_insert);
       return $username;
     }

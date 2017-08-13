@@ -117,6 +117,7 @@ if ($conn_user->query($sql_user) == TRUE) {
 $sql_user = "CREATE TABLE auth_tokens (
 username VARCHAR(32) NOT NULL PRIMARY KEY,
 token VARCHAR(64) NOT NULL,
+expire BIGINT UNSIGNED,
 timestamp BIGINT UNSIGNED
 )";
 

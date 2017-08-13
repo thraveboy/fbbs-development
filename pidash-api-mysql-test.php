@@ -55,7 +55,7 @@
 
   // Check to see if username already exists
   $userfound = FALSE;
-  $user_info_query = 'SELECT * FROM "users" WHERE username = "' .
+  $user_info_query = 'SELECT * FROM users WHERE username = "' .
                       $cleanusername . '" ORDER BY timestamp DESC LIMIT 1';
   $results_user_info = $db->query($user_info_query);
 

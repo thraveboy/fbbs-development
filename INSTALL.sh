@@ -21,5 +21,7 @@ echo 'sudo mysql_install_db'
 sudo mysql_install_db
 echo 'sudo /usr/bin/mysql_secure_installation'
 sudo /usr/bin/mysql_secure_installation
+echo 'sudo php mysql-setup.php'
+sudo php mysql-setup.php
 echo 'sudo apache2ctl restart'
 sudo apache2ctl restart

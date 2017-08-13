@@ -81,7 +81,7 @@ function generateTimeValueDataObj (keyval_obj) {
       label: "", 
       html: "",
       min_timestamp: current_time,
-      max_timestamp: current_time
+      max_timestamp: 0
   };
   var entry_obj = new Object();
  
@@ -117,7 +117,7 @@ function generateValueTimeDataObj (keyval_obj) {
       label: "", 
       html: "",
       min_timestamp: current_time,
-      max_timestamp: current_time
+      max_timestamp: 0
   };
   var entry_obj = new Object();
  
@@ -276,7 +276,7 @@ function processDataDraw( input_json ) {
   var graph_y_min_value = Number.MAX_VALUE;
   var graph_y_max_value = -Number.MAX_VALUE;
   var min_timestamp = new Date().getTime();
-  var max_timestamp = min_timestamp;
+  var max_timestamp = 0;
   var current_time = min_timestamp/1000;
   var previous_time = current_time;
 

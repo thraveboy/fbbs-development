@@ -28,20 +28,11 @@ input {
 <?php
   $_LOCAL_API_CALLS = 1;
 
-  class FDB extends mysqli
+  class FDB extends SQLite3
   {
-    private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "";
-    private $fbbs_database = "FBBSUSER";
-
     function __construct()
     {
-      parent::__construct($this->fbbs_servername, $this->fbbs_username,
-                          $this->fbbs_password, $this->fbbs_database);
-      if ($this->connect_error) {
-          error_log("Failed to connect to FBBSUSER: " . $this->connect_error);
-      }
+      $this->open('fbbs-user.db');
     }
   }
 
@@ -65,16 +56,16 @@ input {
 
     $db = new FDB();
     if(!$db){
-      echo "Can not connect to DB\n";
+      echo $db->lastErrorMsg();
     }
-    $cleanusername = $db->real_escape_string($usernamepost);
-    $user_info_query = 'SELECT * FROM users WHERE username = "' .
+    $cleanusername = $db->escapeString($usernamepost);
+    $user_info_query = 'SELECT * FROM "users" WHERE username = "' .
                         $cleanusername . '" ORDER BY timestamp DESC LIMIT 1';
-    error_log("mysql query: " . $user_info_query . "\n");
     $results_user_info = $db->query($user_info_query);
     $userfound = FALSE;
-    if ((!empty($results_user_info)) && ($results_user_info->num_rows > 0)) {
-      $user_info_array = $results_user_info->fetch_assoc();
+
+    if (!empty($results_user_info)) {
+      $user_info_array = $results_user_info->fetchArray(SQLITE3_ASSOC);
       if ($user_info_array) {
         $retrievedusername = $user_info_array["username"];
         $retrievedpassword = $user_info_array["password"];
@@ -82,13 +73,13 @@ input {
           echo 'password matched...<br>';
           $auth_token = bin2hex(openssl_random_pseudo_bytes(16));
           echo 'token generated....<br>';
-          $request_time = time();
           $auth_encode = password_hash($auth_token, PASSWORD_DEFAULT);
           $auth_insert_query = 'REPLACE INTO auth_tokens ' .
                                '(username, token, expire, timestamp) ' .
                                'VALUES ("' . $retrievedusername . '", "'.
-                               $auth_encode . '", 0, ' . $request_time . ')';
-          $db->query($auth_insert_query);
+                               $auth_encode . '", "", "' . $request_time .
+                               '")';
+          $db->exec($auth_insert_query);
           echo '<div id="username" style="visibility: hidden">';
           echo $cleanusername;
           echo '</div>';
@@ -113,8 +104,8 @@ input {
          $request_time = time();
          $create_query = 'INSERT INTO users (username, password, timestamp) ' .
                          'VALUES ("'. $cleanusername . '", "' .
-                         $passwordhashed . '", ' . $request_time . ')';
-         $db->query($create_query);
+                         $passwordhashed . '", "'. $request_time . '")';
+         $db->exec($create_query);
          echo 'created user account for ' . $cleanusername . '.....<br>';
       }
       else {

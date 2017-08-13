@@ -112,7 +112,7 @@
     $query_string = "SELECT id, ip, value, timestamp from " . $table_name .
                     " ORDER BY  ".  $order_column. "  ". $order_type .
                     " LIMIT ". $max_limit;
-    echo $query_string;
+    error_log($query_string);
     $results = $db->query($query_string);
     if ((!empty($results)) || $results->num_rows > 0) {
       $outputObject->append('"value":[{');
@@ -139,8 +139,8 @@
       $table_create_query = "CREATE TABLE ".$table_name .
                             " (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY," .
                             " ip VARCHAR(32)," .
-                            "value BLOB, timestamp TIMESTAMP)";
-      echo $table_create_query . "\n";
+                            "value BLOB, timestamp BIGINT UNSIGNED)";
+      error_log($table_create_query);
       $db->query($table_create_query);
       $error_code = $db->error;
       $error_msg = $db->error;
@@ -236,13 +236,15 @@
         json_encode($db->real_escape_string(str_replace('"', '', trim($value))));
       if (!$update_val) {
         $insert_query =  'INSERT INTO ' . $table_name .
-                         ' (ip, value) ' .
-                         'VALUES ("'  . $ip . '", '. $j_value . ')';
+                         ' (ip, value, timestamp) ' .
+                         'VALUES ("'  . $ip . '", '. $j_value . ', ' .
+                        $request_time . ')';
       }
       else {
         // CHECK TO SEE IF NEED TO UPDATE TIMESTAMP TOO
         $insert_query =  'UPDATE '. $table_name . ' SET ' .
                          ' ip = "' . $ip . '", value = '. $j_value .
+                         ', timestamp = ' . $request_time .
                          ' WHERE id = ' . $update_location;
       }
       error_log($insert_query);

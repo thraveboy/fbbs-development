@@ -55,7 +55,7 @@ $sql = "CREATE TABLE test (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 ip VARCHAR(32) NOT NULL,
 value BLOB,
-timetamp TIMESTAMP
+timetamp BIGINT UNSIGNED
 )";
 
 if ($conn_db->query($sql) == TRUE) {
@@ -130,7 +130,7 @@ $sql_user = "CREATE TABLE user_auth_log (
 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 username VARCHAR(32) UNIQUE NOT NULL,
 token VARCHAR(32) NOT NULL,
-timestamp TIMESTAMP
+timestamp BIGINT UNSIGNED
 )";
 
 if ($conn_user->query($sql_user) == TRUE) {

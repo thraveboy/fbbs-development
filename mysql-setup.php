@@ -114,6 +114,21 @@ if ($conn_user->query($sql_user) == TRUE) {
     echo "Error creating table users: " . $conn_user->error . "\n";
 }
 
+$sql_user = "CREATE TABLE user_attr (
+id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+userid BIGINT UNSIGNED NOT NULL,
+attribute VARCHAR(64) NOT NULL,
+value VARCHAR(64) NOT NULL,
+user_mod BOOLEAN NOT NULL DEFAULT 0,
+timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+
+if ($conn_user->query($sql_user) == TRUE) {
+    echo "Table user_attr created successfully\n";
+} else {
+    echo "Error creating table user_attr: " . $conn_user->error . "\n";
+}
+
 $sql_user = "CREATE TABLE auth_tokens (
 username VARCHAR(32) NOT NULL PRIMARY KEY,
 token VARCHAR(64) NOT NULL,

@@ -44,6 +44,7 @@
   echo '</b>';
   echo '</div>';
 
+  $can_post_board = FALSE;
   require_once 'fbbs-std-cmd.php';
 ?>
 

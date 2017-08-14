@@ -30,14 +30,16 @@ id="form1">
 ?>
     <INPUT TYPE="submit" Value="|/\enter/\|">
 </FORM>
-<FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
-:  post message|>
 <?php
-  echo '<INPUT TYPE="Text" VALUE="" ';
-  echo 'id="message" NAME="command" SIZE="25">';
+  if ($can_post_board) {
+    echo '<FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
+:  post message|>';
+    echo '<INPUT TYPE="Text" VALUE="" ';
+    echo 'id="message" NAME="command" SIZE="25">';
+    echo '<INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
+  </FORM>';
+  }
 ?>
-  <INPUT TYPE="Submit" Value="<-enter|" SIZE="7">
-</FORM>
 <FORM NAME="viewmsg" METHOD="POST" ID="getmsg" ACTION="">
 : read message@>
 <INPUT TYPE="TEXT" VALUE="" id="getmsgid" SIZE="5">
@@ -156,11 +158,13 @@ function capturePostEnter(e) {
 }
 
 var formElementMsg = document.getElementById("postmsg");
-if (formElementMsg.attachEvent) {
-  formElementMsg.attachEvent("submit", capturePostEnter);
-}
-else {
-  formElementMsg.addEventListener("submit", capturePostEnter);
+if (formElementMsg) {
+  if (formElementMsg.attachEvent) {
+    formElementMsg.attachEvent("submit", capturePostEnter);
+  }
+  else {
+    formElementMsg.addEventListener("submit", capturePostEnter);
+  }
 }
 
 function captureGetMsgEnter(e) {

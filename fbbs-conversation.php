@@ -35,6 +35,7 @@
 
   $lastauth = last_auth_user();
 
+  $can_post_board = TRUE;
   require_once 'fbbs-std-cmd.php';
 ?>
 

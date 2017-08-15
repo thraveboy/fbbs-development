@@ -70,7 +70,6 @@
     $previous_command = trim($_GET['command']);
     $_POST['command'] = $previous_command;
   }
-  error_log("Previous command: " . $previous_command);
   $exploded_previous_command = explode(" ", $previous_command, 3);
   $arg_count = count($exploded_previous_command);
   $retrieved_value = FALSE;

@@ -47,7 +47,7 @@
           $userattr_result = $fdbuser->query($userattr_query);
           if ($userattr_result->num_rows > 0) {
             while ($userattr_row = $userattr_result->fetch_assoc()) {
-              $attr_id = $userattr_id['id'];
+              $attr_id = $userattr_row['id'];
               $attr_name = $userattr_row['attribute'];
               $attr_value = $userattr_row['value'];
               $attr_usermod = $userattr_row['user_mod'];

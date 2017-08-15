@@ -30,7 +30,8 @@
    if ($username != "") {
       $fdbuser = new FDBUSER();
       if (!$fdbuser) {
-        echo $fdbuser->error;
+        error_log("Can not connect to FDBUSER db");
+        return $user_attributes;
       }
       $clean_username = $fdbuser->real_escape_string($username);
       $user_attributes['username'] = $clean_username;
@@ -62,6 +63,23 @@
       }
     }
     return $user_attributes;
+  }
+
+  function add_user_attribute($user_id, $attribute,$value,$user_mod="False"){
+    if ($user_id > 0) {
+      $fdbuser = new FDBUSER();
+      if (!$fdbuser) {
+        error_log("Can not connect to FDBUSER db");
+        return;
+      }
+      $userattr_sql = "INSERT INTO user_attr " .
+                      "(userid, attribute, value, user_mod) VALUES (" .
+                      $user_id . ", '" . $attribute . "', '" . $value . "', " .
+                      $user_mod . ")";
+      print_r($userattr_sql);
+      $fdbuser->query($userattr_sql);
+    }
+    return;
   }
 
 ?>

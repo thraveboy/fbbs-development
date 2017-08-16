@@ -5,8 +5,6 @@
   $user_attr_fields['CREATE_TABLE'] = "create_table";
   $user_attr_fields['IS_ADMIN'] = "is_admin";
 
-  echo $user_attr_fields['CAN_READ'] . PHP_EOL;
-
   class FDBUSER extends mysqli
   {
     private $fbbs_servername = "localhost";
@@ -66,6 +64,7 @@
   }
 
   function add_user_attribute($user_id, $attribute,$value,$user_mod="False"){
+    $insert_id = -1;
     if ($user_id > 0) {
       $fdbuser = new FDBUSER();
       if (!$fdbuser) {
@@ -76,10 +75,23 @@
                       "(userid, attribute, value, user_mod) VALUES (" .
                       $user_id . ", '" . $attribute . "', '" . $value . "', " .
                       $user_mod . ")";
-      print_r($userattr_sql);
+      $fdbuser->query($userattr_sql);
+      $insert_id = $fdbuser->insert_id;
+    }
+    return $insert_id;
+  }
+
+  function remove_user_attribute($attr_id=-1) {
+    if ($attr_id > 0) {
+      $fdbuser = new FDBUSER();
+      if (!$fdbuser) {
+        error_log("Can not connect to FDBUSER db");
+        return -1;
+      }
+      $userattr_sql = "DELETE FROM user_attr WHERE id = " . $attr_id;
       $fdbuser->query($userattr_sql);
     }
-    return;
+    return $attr_id;
   }
 
 ?>

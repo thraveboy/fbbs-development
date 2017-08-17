@@ -5,7 +5,7 @@
   $user_attr_fields['CREATE_TABLE'] = "create_table";
   $user_attr_fields['IS_ADMIN'] = "is_admin";
 
-  class FDBUSER extends mysqli
+  class FDBUSERADMIN extends mysqli
   {
     private $fbbs_servername = "localhost";
     private $fbbs_username = "root";
@@ -26,16 +26,16 @@
    $user_attributes = [];
    $user_id = 0;
    if ($username != "") {
-      $fdbuser = new FDBUSER();
-      if (!$fdbuser) {
-        error_log("Can not connect to FDBUSER db");
+      $FDBUSERADMIN = new FDBUSERADMIN();
+      if (!$FDBUSERADMIN) {
+        error_log("Can not connect to FDBUSERADMIN db");
         return $user_attributes;
       }
-      $clean_username = $fdbuser->real_escape_string($username);
+      $clean_username = $FDBUSERADMIN->real_escape_string($username);
       $user_attributes['username'] = $clean_username;
       $userid_query = "SELECT id FROM users where username = '" .
         $clean_username . "'";
-      $userid_result = $fdbuser->query($userid_query);
+      $userid_result = $FDBUSERADMIN->query($userid_query);
       if ($userid_result->num_rows > 0) {
         $userid_array = $userid_result->fetch_assoc();
         $user_id = $userid_array['id'];
@@ -43,7 +43,7 @@
         if ($user_id > 0) {
           $userattr_query = "SELECT * from user_attr WHERE userid = " .
             $user_id;
-          $userattr_result = $fdbuser->query($userattr_query);
+          $userattr_result = $FDBUSERADMIN->query($userattr_query);
           if ($userattr_result->num_rows > 0) {
             while ($userattr_row = $userattr_result->fetch_assoc()) {
               $attr_id = $userattr_row['id'];
@@ -66,30 +66,30 @@
   function add_user_attribute($user_id, $attribute,$value,$user_mod="False"){
     $insert_id = -1;
     if ($user_id > 0) {
-      $fdbuser = new FDBUSER();
-      if (!$fdbuser) {
-        error_log("Can not connect to FDBUSER db");
+      $FDBUSERADMIN = new FDBUSERADMIN();
+      if (!$FDBUSERADMIN) {
+        error_log("Can not connect to FDBUSERADMIN db");
         return;
       }
       $userattr_sql = "INSERT INTO user_attr " .
                       "(userid, attribute, value, user_mod) VALUES (" .
                       $user_id . ", '" . $attribute . "', '" . $value . "', " .
                       $user_mod . ")";
-      $fdbuser->query($userattr_sql);
-      $insert_id = $fdbuser->insert_id;
+      $FDBUSERADMIN->query($userattr_sql);
+      $insert_id = $FDBUSERADMIN->insert_id;
     }
     return $insert_id;
   }
 
   function remove_user_attribute($attr_id=-1) {
     if ($attr_id > 0) {
-      $fdbuser = new FDBUSER();
-      if (!$fdbuser) {
-        error_log("Can not connect to FDBUSER db");
+      $FDBUSERADMIN = new FDBUSERADMIN();
+      if (!$FDBUSERADMIN) {
+        error_log("Can not connect to FDBUSERADMIN db");
         return -1;
       }
       $userattr_sql = "DELETE FROM user_attr WHERE id = " . $attr_id;
-      $fdbuser->query($userattr_sql);
+      $FDBUSERADMIN->query($userattr_sql);
     }
     return $attr_id;
   }

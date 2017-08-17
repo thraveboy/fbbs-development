@@ -26,4 +26,8 @@ $test_user_attributes = get_user_attributes("happy");
 
 print_r($test_user_attributes);
 
+$user_list = get_users();
+
+print_r($user_list);
+
 ?>

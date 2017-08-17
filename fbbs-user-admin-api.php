@@ -94,4 +94,22 @@
     return $attr_id;
   }
 
+  function get_users($page="") {
+    $user_list = [];
+    $FDBUSERADMIN = new FDBUSERADMIN();
+    if (!$FDBUSERADMIN) {
+      error_log("Can not connect to FDBUSERADMIN db");
+      return $user_list;
+    }
+    $userlist_sql = "SELECT * from users LIMIT 20";
+    $userlist_result = $FDBUSERADMIN->query($userlist_sql);
+    while ($user_row = $userlist_result->fetch_assoc()) {
+      $current_user = [];
+      $current_user['id'] = $user_row['id'];
+      $current_user['username'] = $user_row['username'];
+      array_push($user_list, $current_user);
+    }
+    return $user_list;
+  }
+
 ?>

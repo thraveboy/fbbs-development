@@ -258,5 +258,37 @@
   if (!$_LOCAL_API_CALLS) {
     $outputObject->send();
   }
+
+  function available_tables($table_prefix="", $user_permissions) {
+    $return_table_list = [];
+    if (!empty($table_prefix) && (!empty($user_permissions))) {
+       $can_read_table_prefix = False;
+       foreach ($user_permissions as $entry) {
+          if ($entry["attribute"] == "can_read") {
+            $table_prefixes = explode(",", $entry["value"]);
+            foreach ($table_prefixes as $current_prefix) {
+              if ($current_prefix == $table_prefix) {
+                $can_read_table_prefix = True;
+              }
+            }
+          }
+       }
+       if ($can_read_table_prefix) {
+         $db = new FDB();
+         if (!$db) {
+           return $return_table_list;
+         }
+         $tables_sql = "SHOW TABLES LIKE '" . $table_prefix . "%'";
+         $tables_result = $db->query($tables_sql);
+         while ($row = $tables_result->fetch_assoc()) {
+           foreach ($row as $key => $value) {
+             array_push($return_table_list, $value);
+           }
+         }
+       }
+    }
+    return $return_table_list;
+  }
+
 ?>
 

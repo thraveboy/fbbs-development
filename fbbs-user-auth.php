@@ -1,4 +1,5 @@
 <?php
+
   class FDBUSER extends mysqli
   {
     private $fbbs_servername = "localhost";
@@ -75,6 +76,14 @@
       }
     }
     return $return_id;
+  }
+
+  include 'fbbs-default-permissions.php';
+
+  function get_user_permissions() {
+    $default_permissions_obj = new DefaultPermissions();
+    $default_permissions = $default_permissions_obj->get_permissions();
+    return $default_permissions;
   }
 
   function last_auth_user() {

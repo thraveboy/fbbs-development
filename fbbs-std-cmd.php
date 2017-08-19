@@ -47,6 +47,20 @@ id="form1">
 <span id="displaymsg"></span>
 </form>
 
+<?php
+  $user_permissions = get_user_permissions();
+
+  if ($TABLE_PREFIX) {
+    $read_tables = available_tables($TABLE_PREFIX, $user_permissions);
+    foreach ($read_tables as $tablename) {
+      echo "<button onclick=retrieveBoard('" . $tablename . "')>" .
+        $tablename . '</button>';
+    }
+  }
+
+?>
+
+
 <br>
 : <u>board info</u> : <span id="board_name"></span>
 <br>
@@ -112,6 +126,11 @@ function updateDash(addCommandToUrl = false ) {
                         getURLWithoutParams() + '?command=' + dashName);
     }
   }
+}
+
+function retrieveBoard(boardName) {
+  document.getElementById("command").value = boardName;
+  updateDash(true);
 }
 
 function captureFormEnter(e) {

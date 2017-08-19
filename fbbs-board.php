@@ -35,12 +35,6 @@
 
   $username = authorize_user();
 
-  $user_permissions = get_user_permissions();
-
-  $read_tables = available_tables($TABLE_PREFIX, $user_permissions);
-
-  print_r($read_tables);
-
   $lastauth = last_auth_user();
 
   $can_post_board = TRUE;

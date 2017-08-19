@@ -8,6 +8,7 @@
 <body>
 
 <?php
+  $TABLE_PREFIX = "Ticker";
   $previous_cmd_trim = '';
 
   if (isset($_POST['command'])) {

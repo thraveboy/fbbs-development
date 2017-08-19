@@ -267,7 +267,7 @@
           if ($entry["attribute"] == "can_read") {
             $table_prefixes = explode(",", $entry["value"]);
             foreach ($table_prefixes as $current_prefix) {
-              if ($current_prefix == $table_prefix) {
+              if (trim($current_prefix) == $table_prefix) {
                 $can_read_table_prefix = True;
               }
             }

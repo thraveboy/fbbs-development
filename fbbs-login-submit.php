@@ -1,27 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-body, input {
-    font-family: monospace;
-    background-color: black;
-    color: green;
-    font-size: large;
-}
-
-input {
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    border-color: green;
-    outline-width: 1px;
-    outline-width-left: 0px;
-    outline-width-right: 0px;
-    outline-color: green;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" href="fbbs-login-style.css">
 </head>
 
 <body>
@@ -136,31 +116,27 @@ input {
   document.write(token);
 </script>
 <p>
-|\______
+**********************************
 <br>
---------->>>>
+fury bulletin board system (fbbs)
 <br>
-[o]----[o]---=>>>>>>>
+**********************************
 <br>
-----Velcome------->>>>>>>>>
+** run on a raspberry pi **
 <br>
-*************to*************
-<br>
-** Fury's Fortress (fbbs) **
-<br>
-**------------------------**
-<br>
-****************************
-<br>
+**********************************
 <FORM NAME="form1" METHOD="POST" ACTION="fbbs-login-submit.php">
 username:
-<INPUT TYPE="Text" VALUE="" id="username" NAME="username" SIZE="40" autofocus>
+<br>
+<INPUT TYPE="Text" VALUE="" id="username" NAME="username" SIZE="15" autofocus>
 <br>
 password:
-<INPUT TYPE="Password" VALUE="" id="password" NAME="password" SIZE="40">
+<br>
+<INPUT TYPE="Password" VALUE="" id="password" NAME="password" SIZE="15">
 <br>
 password again (if new user):
-<INPUT TYPE="Password" VALUE="" id="password-again" NAME="password-again" SIZE="40">
+<br>
+<INPUT TYPE="Password" VALUE="" id="password-again" NAME="password-again" SIZE="15">
 <div class="userpassDiv" />
 <br>
 <input type="submit" value="\._enter_./" />

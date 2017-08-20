@@ -1,3 +1,5 @@
+<canvas id="dashChart"></canvas>
+
 <FORM NAME="form1" METHOD="POST" id="form1" hidden>
 <?php
   echo '<INPUT TYPE="text" VALUE="' . $previous_command  . ' " ';
@@ -42,8 +44,6 @@ post message-><br>';
 <br>
 <br>
 <div id="dash"></div>
-
-<canvas id="dashChart"></canvas>
 
 <script src="moment-with-locales.min.js"></script>
 <script src="Chart.min.js"></script>

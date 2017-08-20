@@ -29,6 +29,15 @@ span.data_output {
     font-family: monospace; 
 }
 
+span#message {
+    color: white;
+}
+
+span#timestamp {
+    color: blue;
+    text-decoration:underline;
+}
+
 input[type=submit], input#launch_command {
     border-top-width: 1px;
     border-bottom-width: 1px;

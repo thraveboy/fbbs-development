@@ -104,8 +104,9 @@ function generateTimeValueDataObj (keyval_obj) {
   var time_moment = moment(entry_time * 1000).format();
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
-  return_obj.html = new_value + "<br>" +
-                    "(" + new_timediff + " mins ago)<br>";
+  return_obj.html = "<span id='message'>" + new_value + "</span><br>" +
+                    "<span id='timestamp'>(" + new_timediff + 
+                    " mins ago)</span><br>";
   return_obj.label = new_value + "|minsago(" + new_timediff +")";
   return return_obj;
 }

@@ -536,6 +536,7 @@ function processDataDraw( input_json ) {
                     ticks: {
                       fontColor: "rgba(250,250,0,0.9)",
                       fontFamily: "monospace",
+                      fontSize: 20,
                       min: 0
                     },
                   }]

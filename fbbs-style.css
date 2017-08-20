@@ -1,4 +1,4 @@
-body, div, span, button, form, input, #board_info, #dash {
+body, button {
     font-family: monospace; 
     background-color: black;
     color: green;

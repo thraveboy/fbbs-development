@@ -1,4 +1,4 @@
-body, input, input[type=submit], button, textarea, select, keygen {
+body, input, button, textarea, select, keygen {
     font-family: monospace;
     font: 8px monospace;
     background-color: black;

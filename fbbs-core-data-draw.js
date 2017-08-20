@@ -8,7 +8,7 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
   this.xaxis_type = "category";
   this.chart_type = "line";
   this.label_type = "descent";
-  this.label_font_size = "10pt";
+  this.label_font_size = "12pt";
   this.label_descent_size = 25;
   this.title_font_size = 15;
   this.title_padding = 10;
@@ -104,8 +104,8 @@ function generateTimeValueDataObj (keyval_obj) {
   var time_moment = moment(entry_time * 1000).format();
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
-  return_obj.html = "|@" + new_id + "|(" + time_moment + ")-=> " +
-                    new_value + "<br>";
+  return_obj.html = new_value + "<br>" +
+                    "(" + new_timediff + " mins ago)<br>";
   return_obj.label = new_value + "|minsago(" + new_timediff +")";
   return return_obj;
 }
@@ -144,8 +144,8 @@ function generateValueTimeDataObj (keyval_obj) {
   var time_moment = moment(entry_time * 1000).format();
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
-  return_obj.html = "|@" + new_id + "|(" + time_moment + ")-=> " +
-                    new_value + "<br>";
+  return_obj.html = new_value + "<br>" +
+                    "|@" + new_id + "|(" + new_timediff + ")<br>";
   return_obj.label = new_value;
   return return_obj;
 }

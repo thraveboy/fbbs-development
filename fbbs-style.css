@@ -6,7 +6,7 @@ body, input, button {
 }
 
 button {
-  font-size: 1em;
+    font-size: 1em;
 }
 
 input {
@@ -22,6 +22,9 @@ input {
     color: green;
 }
 
+div, input[type=text i] {
+    font-size: 1em;
+}
 span.data_output {
     font-family: monospace; 
 }

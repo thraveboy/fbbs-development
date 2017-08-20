@@ -17,7 +17,7 @@ id="form1" hidden></FORM>
 <br>
 <?php
   $user_permissions = get_user_permissions();
-   
+
   echo $TABLE_PREFIX . "s:<br><br>";
   if ($TABLE_PREFIX) {
     $read_tables = available_tables($TABLE_PREFIX, $user_permissions);

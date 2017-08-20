@@ -46,7 +46,7 @@
   echo '</div>';
 
   $can_post_board = FALSE;
-  require_once 'fbbs-std-cmd.php';
+  require_once 'fbbs-std-graph.php';
 ?>
 
 <script>

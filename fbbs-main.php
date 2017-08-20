@@ -49,7 +49,6 @@ last online:[<?=$lastauth?>]
 
 <script>
   function launchCommand(str) {
-//    var str = document.getElementById("command").value;
     var str_trim = str.trim();
     var str = str_trim.split(" ")[0];
     if (str.length == 0) {

@@ -1,8 +1,12 @@
-body, div, span, form, input, #board_info, #dash {
+body, div, span, button, form, input, #board_info, #dash {
     font-family: monospace; 
     background-color: black;
     color: green;
-    font-size: large;
+    font-size: 2.5em;
+}
+
+button {
+  font-size: 1em;
 }
 
 input {

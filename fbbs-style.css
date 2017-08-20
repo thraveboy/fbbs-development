@@ -1,4 +1,4 @@
-body, button {
+body, input, button {
     font-family: monospace; 
     background-color: black;
     color: green;

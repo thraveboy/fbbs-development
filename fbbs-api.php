@@ -97,22 +97,46 @@
   }
   $ip = $db->real_escape_string($_SERVER['REMOTE_ADDR']);
   if (($arg_count == 1) ||
-      (($arg_count == 2) && ($exploded_previous_command[1] == '@'))) {
+      (($arg_count == 2) && ($exploded_previous_command[1][0] == '@'))) {
     $table_name = $db->real_escape_string($exploded_previous_command[0]);
     $table_name = preg_replace("/[^a-zA-Z0-9]+/", "", $table_name);
-    $order_type = "DESC";
-    $max_limit = "20";
-    $order_column = "timestamp";
-    if ($arg_count == 2) {
-      $order_type = "ASC";
-      $max_limit = 5;
-      $order_column = "id";
+    if (($arg_count == 1) ||
+        (($arg_count == 2) && ($exploded_previous_command[1] == '@'))) {
+      $order_type = "DESC";
+      $max_limit = "20";
+      $order_column = "timestamp";
+      if ($arg_count == 2) {
+        $order_type = "ASC";
+        $max_limit = 5;
+        $order_column = "id";
+      }
+      $query_string = "SELECT id, ip, value, timestamp from " . $table_name .
+                      " ORDER BY  ".  $order_column. "  ". $order_type .
+                      " LIMIT ". $max_limit;
+      $results = $db->query($query_string);
+    } else {
+      $page = abs(intval(substr($exploded_previous_command[1], 1)));
+      $query_string = "SELECT id FROM " . $table_name . " ORDER BY id " .
+                      "DESC LIMIT 1";
+      $results = $db->query($query_string);
+      if (!empty($results) || $results->num_rows > 0) {
+        $min_id = 1;
+        $max_id = 20;
+        $ids_back = ($page+1) * 20;
+        $row_results = $results->fetch_assoc();
+        $last_id = intval($row_results['id']);
+        $page_begin_id = $last_id - $ids_back;
+        if ($page_begin_id > $min_id) {
+          $min_id = $page_begin_id;
+          $max_id = $min_id + 19;
+        }
+        $query_string = "SELECT id, ip, value, timestamp FROM " .
+                        $table_name . " WHERE id >= " . $min_id . " AND " .
+                        "id <= " . $max_id . " ORDER BY id DESC";
+        error_log($query_string);
+        $results = $db->query($query_string);
+      }
     }
-    $query_string = "SELECT id, ip, value, timestamp from " . $table_name .
-                    " ORDER BY  ".  $order_column. "  ". $order_type .
-                    " LIMIT ". $max_limit;
-    error_log($query_string);
-    $results = $db->query($query_string);
     if ((!empty($results)) || $results->num_rows > 0) {
       $outputObject->append('"value":[{');
       $row_num = 0;

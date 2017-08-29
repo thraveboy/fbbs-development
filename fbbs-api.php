@@ -70,6 +70,7 @@
     $previous_command = trim($_GET['command']);
     $_POST['command'] = $previous_command;
   }
+  error_log("Command: " . $previous_command);
   $exploded_previous_command = explode(" ", $previous_command, 3);
   $arg_count = count($exploded_previous_command);
   $retrieved_value = FALSE;
@@ -256,7 +257,8 @@
 
       $request_time = time();
       $j_value =
-        json_encode($db->real_escape_string(str_replace('"', '', trim($value))));
+        json_encode($db->real_escape_string(trim($value)),
+          JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
       if (!$update_val) {
         $insert_query =  'INSERT INTO ' . $table_name .
                          ' (ip, value, timestamp) ' .

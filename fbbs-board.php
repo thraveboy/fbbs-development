@@ -46,12 +46,14 @@
 function showDash(str_full) {
   var xhttp;
   var str_trim = str_full.trim();
-  var str = str_trim.split(" ")[0];
+//  var str = str_trim.split(" ")[0];
+  var str = str_trim;
   if (str.length == 0) {
     return;
   }
+  var boardName = str.split(" ")[0];
 
-  fbbsUpdateBoardInfo(str);
+  fbbsUpdateBoardInfo(boardName);
 
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {

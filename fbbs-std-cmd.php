@@ -6,7 +6,7 @@
   echo 'id="command" NAME="command" SIZE="20" autofocus>';
 ?>
 </FORM>
-
+<br>
 <span id="board_name"></span>: Welcome, <?=$username?>.
 <button TYPE="Submit"  FORM="backtomain" Value="Submit">Back to Main</button>
 <br>
@@ -14,16 +14,7 @@
   <FORM ID="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
   </form>
 </span>
-<br>
-<?php
-  if ($can_post_board) {
-    echo '<FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
-post message-><br>';
-    echo '<INPUT TYPE="Text" VALUE="" ';
-    echo 'id="message" NAME="command" SIZE="45">';
-    echo '</FORM>';
-  }
-?>
+
 <?php
   $user_permissions = get_user_permissions();
   echo '<br>';
@@ -37,6 +28,44 @@ post message-><br>';
   }
 
 ?>
+
+<br>
+<br>
+
+<?php
+  if ($can_post_board) {
+    echo '<FORM NAME="postmsg" METHOD="POST" ID="postmsg" ACTION="">
+post message-><br>';
+    echo '<INPUT TYPE="Text" VALUE="" ';
+    echo 'id="message" NAME="command" SIZE="45">';
+    echo '</FORM>';
+  }
+?>
+
+<br>
+
+<?php
+  $page = 0;
+  if (!empty($previous_cmd_trim)) {
+    $cmd_exploded = explode($previous_cmd_trim, " ");
+    if (count($cmd_exploded) == 2) {
+      if (($cmd_exploded[1][0] == '@') && (strlen($cmd_exploded[1]) > 1)) {
+        $page_substr = substr($cmd_exploded[1], 1);
+      }
+    }
+  }
+
+  echo '<span id="pagenum" hidden>';
+  echo strval($page) . '</span>';
+  echo '<span id="previous_page"><button onclick=previousPage()>Prev';
+  echo '</button></span>';
+  echo '&nbsp;';
+  echo '<span id="next_page" ';
+  if ($page == 0) echo 'style="visibility: hidden"';
+  echo '><button onclick=nextPage()>Next</button></span>';
+
+?>
+
 <br>
 <div id="board_info" hidden></div>
 <br>
@@ -75,7 +104,50 @@ function updateDash(addCommandToUrl = false ) {
 
 function retrieveBoard(boardName) {
   document.getElementById("command").value = boardName;
+  document.getElementById("pagenum").value = 0;
   updateDash(true);
+}
+
+function previousPage() {
+  var commandVal = document.getElementById("command").value;
+  if (commandVal) {
+    var commandSplit = commandVal.split(" ");
+    var boardName = commandSplit[0]
+    var pageNum = 0;
+    var pageVal = document.getElementById("pagenum").value;
+    if (pageVal) {
+      pageNum = parseInt(pageVal);
+    }
+    pageNum += 1;
+    document.getElementById("pagenum").value = pageNum;
+    document.getElementById("command").value = boardName + " @" + pageNum;
+    nextPageElement = document.getElementById("next_page");
+    nextPageElement.style.visibility = "visible";
+    updateDash();
+  }
+}
+
+function nextPage() {
+  var commandVal = document.getElementById("command").value;
+  if (commandVal) {
+    var commandSplit = commandVal.split(" ");
+    var boardName = commandSplit[0]
+    var pageNum = 0;
+    var pageVal = document.getElementById("pagenum").value;
+    if (pageVal) {
+      pageNum = parseInt(pageVal);
+      pageNum -= 1;
+    }
+    document.getElementById("pagenum").value = pageNum;
+    document.getElementById("command").value = boardName + " @" + pageNum;
+    if (pageNum == 0) {
+      nextPageElement = document.getElementById("next_page");
+      nextPageElement.style.visibility = "hidden";
+      document.getElementById("command").value = boardName;
+    }
+    updateDash();
+  }
+
 }
 
 function captureFormEnter(e) {
@@ -97,7 +169,8 @@ else {
 function capturePostEnter(e) {
   if (e.preventDefault) e.preventDefault();
 
-  var dashName = document.getElementById("command").value;
+  var dashValue = document.getElementById("command").value;
+  var dashName = dashValue.split(" ")[0];
   var xhttp_dashinfo;
   xhttp_dashinfo = new XMLHttpRequest();
 

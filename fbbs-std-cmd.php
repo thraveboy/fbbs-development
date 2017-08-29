@@ -14,6 +14,30 @@
   <FORM ID="backtomain" METHOD="POST" ACTION="fbbs-main.php" style="display:inline">
   </form>
 </span>
+<br>
+<?php
+  $page = 0;
+  if (!empty($previous_cmd_trim)) {
+    $cmd_exploded = explode($previous_cmd_trim, " ");
+    if (count($cmd_exploded) == 2) {
+      if (($cmd_exploded[1][0] == '@') && (strlen($cmd_exploded[1]) > 1)) {
+        $page_substr = substr($cmd_exploded[1], 1);
+      }
+    }
+  }
+
+  echo '<span id="pagenum" hidden>';
+  echo strval($page) . '</span>';
+  echo '<span id="previous_page"><button onclick=previousPage()>Prev';
+  echo '</button></span>';
+  echo '&nbsp;';
+  echo '<span id="next_page" ';
+  if ($page == 0) echo 'style="visibility: hidden"';
+  echo '><button onclick=nextPage()>Next</button></span>';
+
+?>
+
+<br>
 
 <?php
   $user_permissions = get_user_permissions();
@@ -42,31 +66,6 @@ post message-><br>';
   }
 ?>
 
-<br>
-
-<?php
-  $page = 0;
-  if (!empty($previous_cmd_trim)) {
-    $cmd_exploded = explode($previous_cmd_trim, " ");
-    if (count($cmd_exploded) == 2) {
-      if (($cmd_exploded[1][0] == '@') && (strlen($cmd_exploded[1]) > 1)) {
-        $page_substr = substr($cmd_exploded[1], 1);
-      }
-    }
-  }
-
-  echo '<span id="pagenum" hidden>';
-  echo strval($page) . '</span>';
-  echo '<span id="previous_page"><button onclick=previousPage()>Prev';
-  echo '</button></span>';
-  echo '&nbsp;';
-  echo '<span id="next_page" ';
-  if ($page == 0) echo 'style="visibility: hidden"';
-  echo '><button onclick=nextPage()>Next</button></span>';
-
-?>
-
-<br>
 <div id="board_info" hidden></div>
 <br>
 <u>Messages</u> :

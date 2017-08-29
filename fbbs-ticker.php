@@ -38,15 +38,15 @@
 
   echo '<div id="graph_stats">';
   echo '<b>';
-  echo '<u>High</u>: <span id="high_value"></span>&nbsp;';
-  echo '<u>Low</u>: <span id="low_value"></span>&nbsp;';
-  echo '<u>Current</u>: <span id="current_value"></span>&nbsp;';
+  echo '<u>High</u>: <span id="high_value"></span><br>';
+  echo '<u>Low</u>: <span id="low_value"></span><br>';
+  echo '<u>Current</u>: <span id="current_value"></span><br>';
   echo '<u>Percent Change</u>: <span id="percentage_change"></span>';
   echo '</b>';
   echo '</div>';
 
   $can_post_board = FALSE;
-  require_once 'fbbs-std-graph.php';
+  require_once 'fbbs-std-cmd.php';
 ?>
 
 <script>
@@ -54,12 +54,13 @@
 function showDash(str_full) {
   var xhttp;
   var str_trim = str_full.trim();
-  var str = str_trim.split(" ")[0];
+  var str = str_trim;
   if (str.length == 0) {
     return;
   }
+  var boardName = str_trim.split(" ")[0];
 
-  fbbsUpdateBoardInfo(str);
+  fbbsUpdateBoardInfo(boardName);
 
   xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {

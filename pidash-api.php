@@ -1,4 +1,6 @@
 <?php
+  require_once 'mysql-login.php';
+
   $_LOCAL_API_CALLS = 0;
   $_COOKIE['username'] = '';
 
@@ -10,12 +12,17 @@
   class apiFDB extends mysqli
   {
     private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "bbs";
+    private $fbbs_username = "";
+    private $fbbs_password = "";
     private $fbbs_database = "FBBSUSER";
 
     function __construct()
     {
+      $this->mysql_login = new MySqlLogin();
+      $this->fbbs_username = $this->mysql_login->mysql_user;
+      $this->fbbs_password = $this->mysql_login->mysql_password;
+      error_log("username: " . $this->fbbs_username);
+      error_log("password: " . $this->fbbs_password);
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_error) {

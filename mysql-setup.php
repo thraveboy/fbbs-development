@@ -1,8 +1,11 @@
 <?php
 
+require_once "mysql-login.php";
+
+$mysql_login = new MySqlLogin();
 $servername = "localhost";
-$username = "root";
-$password = "bbs";
+$username = $mysql_login->mysql_user;
+$password = $mysql_login->mysql_password;
 $dbname = "FBBS";
 $dbname_user = "FBBSUSER";
 $dbname_private = "FBBSPRIVATE";

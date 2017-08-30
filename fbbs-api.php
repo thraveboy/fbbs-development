@@ -1,4 +1,5 @@
 <?php
+  require_once 'mysql-login.php';
 
   if (!isset($_LOCAL_API_CALLS)) {
     $_LOCAL_API_CALLS = false;
@@ -34,12 +35,16 @@
   class FDB extends mysqli
   {
     private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "bbs";
+    private $fbbs_username = "";
+    private $fbbs_password = "";
     private $fbbs_database = "FBBS";
 
     function __construct()
     {
+      $this->mysql_login = new MySqlLogin();
+      $this->fbbs_username = $this->mysql_login->mysql_user;
+      $this->fbbs_password = $this->mysql_login->mysql_password;
+
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_error) {
@@ -50,12 +55,16 @@
   class FDBPrivate extends mysqli
   {
     private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "bbs";
+    private $fbbs_username = "";
+    private $fbbs_password = "";
     private $fbbs_database = "FBBSPRIVATE";
 
     function __construct()
     {
+      $this->mysql_login = new MySqlLogin();
+      $this->fbbs_username = $this->mysql_login->mysql_user;
+      $this->fbbs_password = $this->mysql_login->mysql_password;
+
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_error) {
@@ -164,7 +173,6 @@
                             " (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY," .
                             " ip VARCHAR(32)," .
                             "value BLOB, timestamp BIGINT UNSIGNED)";
-      error_log($table_create_query);
       $db->query($table_create_query);
       $error_code = $db->error;
       $error_msg = $db->error;
@@ -242,7 +250,6 @@
       }
     }
     elseif (canWriteQ()) {
-      error_log("Can write passes");
       $value .=  " " . $db->real_escape_string($exploded_previous_command[2]);
       $update_val = FALSE;
       $update_location = -1;
@@ -272,7 +279,6 @@
                          ', timestamp = ' . $request_time .
                          ' WHERE id = ' . $update_location;
       }
-      error_log($insert_query);
       $db->query($insert_query);
       $insert_id = $db->insert_id;
       $outputObject->append('"value":[{');

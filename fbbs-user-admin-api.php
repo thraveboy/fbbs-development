@@ -1,4 +1,6 @@
 <?php
+  require_once 'mysql-login.php';
+
   $user_attr_fields = [];
   $user_attr_fields['CAN_READ'] = "can_read";
   $user_attr_fields['CAN_WRITE'] = "can_write";
@@ -8,12 +10,15 @@
   class FDBUSERADMIN extends mysqli
   {
     private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "bbs";
+    private $fbbs_username = "";
+    private $fbbs_password = "";
     private $fbbs_database = "FBBSUSER";
 
     function __construct()
     {
+      $this->mysql_login = new MySqlLogin();
+      $this->fbbs_username = $this->mysql_login->mysql_user;
+      $this->fbbs_password = $this->mysql_login->mysql_password;
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_errno) {
@@ -95,7 +100,7 @@
   }
 
   function get_users($page="") {
-    $user_list = [];
+    $user_list = []
     $FDBUSERADMIN = new FDBUSERADMIN();
     if (!$FDBUSERADMIN) {
       error_log("Can not connect to FDBUSERADMIN db");
@@ -107,7 +112,7 @@
       $current_user = [];
       $current_user['id'] = $user_row['id'];
       $current_user['username'] = $user_row['username'];
-      array_push($user_list, $current_user);
+      $user_list.push($current_user);
     }
     return $user_list;
   }

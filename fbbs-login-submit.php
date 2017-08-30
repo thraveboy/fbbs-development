@@ -8,15 +8,20 @@
 <?php
   $_LOCAL_API_CALLS = 1;
 
+  require_once 'mysql-login.php';
+
   class FDB extends mysqli
   {
     private $fbbs_servername = "localhost";
-    private $fbbs_username = "root";
-    private $fbbs_password = "bbs";
+    private $fbbs_username = "";
+    private $fbbs_password = "";
     private $fbbs_database = "FBBSUSER";
 
     function __construct()
     {
+      $this->mysql_login = new MySqlLogin();
+      $this->fbbs_username = $this->mysql_login->mysql_user;
+      $this->fbbs_password = $this->mysql_login->mysql_password;
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_error) {

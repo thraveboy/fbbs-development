@@ -21,8 +21,6 @@
       $this->mysql_login = new MySqlLogin();
       $this->fbbs_username = $this->mysql_login->mysql_user;
       $this->fbbs_password = $this->mysql_login->mysql_password;
-      error_log("username: " . $this->fbbs_username);
-      error_log("password: " . $this->fbbs_password);
       parent::__construct($this->fbbs_servername, $this->fbbs_username,
                           $this->fbbs_password, $this->fbbs_database);
       if ($this->connect_error) {

@@ -46,8 +46,9 @@
   if ($TABLE_PREFIX) {
     $read_tables = available_tables($TABLE_PREFIX, $user_permissions);
     foreach ($read_tables as $tablename) {
+      $tablename_wo_prefix = substr($tablename, strlen($TABLE_PREFIX));
       echo "<button onclick=retrieveBoard('" . $tablename . "')>" .
-        $tablename . '</button>&nbsp;';
+        $tablename_wo_prefix . '</button>&nbsp;';
     }
   }
 

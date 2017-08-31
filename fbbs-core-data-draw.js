@@ -73,6 +73,10 @@ function FBBSDataDraw (ctx, title = "", type = "value_label") {
     this.ornate = false;
   }
 }
+function jsonClean(str_value) {
+  return str_value.replace(/\\'/g, "'").replace(/\\"/g, '"').replace(
+   /u003C/g, "(").replace(/u003E/g, ")");
+}
 
 function generateTimeValueDataObj (keyval_obj) {
   var current_time = new Date().getTime();
@@ -91,7 +95,7 @@ function generateTimeValueDataObj (keyval_obj) {
        });
     });
   var new_id = msgId(entry_obj);
-  var new_value = msgValue(entry_obj).trim();
+  var new_value = jsonClean(msgValue(entry_obj).trim());
   var new_timestamp = msgTimestamp(entry_obj);
   return_obj.label = new_value;
   var timestamp_to_milli = parseInt(new_timestamp,10)*1000;

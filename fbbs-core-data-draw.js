@@ -78,6 +78,10 @@ function jsonClean(str_value) {
    /u003C/g, "(").replace(/u003E/g, ")");
 }
 
+function addLinks(str_value) {
+  return str_value.replace( /(http:\/\/[^\s]+)/gi , '<a href="$1">$1</a>' );
+}
+
 function generateTimeValueDataObj (keyval_obj) {
   var current_time = new Date().getTime();
   var return_obj = { 
@@ -108,7 +112,8 @@ function generateTimeValueDataObj (keyval_obj) {
   var time_moment = moment(entry_time * 1000).format();
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
-  return_obj.html = "<span id='message'>" + new_value + "</span><br>" +
+  var value_w_links = addLinks(new_value);
+  return_obj.html = "<span id='message'>" + value_w_links + "</span><br>" +
                     "<span id='timestamp'>(" + new_timediff + 
                     " mins ago)</span><br>";
   return_obj.label = new_value + "|minsago(" + new_timediff +")";

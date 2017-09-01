@@ -109,13 +109,14 @@ function generateTimeValueDataObj (keyval_obj) {
     return_obj.max_timestamp = timestamp_to_milli;
   return_obj.data = {x:  new_timestamp*1000, y: new_value.length};
   var entry_time = parseInt(msgTimestamp(entry_obj));
-  var time_moment = moment(entry_time * 1000).format();
+  var time_moment =
+    moment(entry_time * 1000).format("dddd, MMMM Do YYYY, h:mm:ss a");
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
   var value_w_links = addLinks(new_value);
   return_obj.html = "<span id='message'>" + value_w_links + "</span><br>" +
-                    "<span id='timestamp'>(" + new_timediff + 
-                    " mins ago)</span><br>";
+                    "<span id='timestamp'>(" + time_moment + 
+                    ")</span><br>";
   return_obj.label = new_value + "|minsago(" + new_timediff +")";
   return return_obj;
 }
@@ -151,11 +152,12 @@ function generateValueTimeDataObj (keyval_obj) {
   var valuewocommas = new_value.replace(/\,/g,"");
   return_obj.data = { x: moment.utc(new_timestamp*1000), y: parseFloat(valuewocommas)};
   var entry_time = parseInt(msgTimestamp(entry_obj));
-  var time_moment = moment(entry_time * 1000).format();
+  var time_moment = 
+    moment(entry_time * 1000).format("dddd, MMMM Do YYYY, h:mm:ss a");
   var timestamp_diff = (timestamp_to_milli - current_time);
   var new_timediff = Math.abs(Math.round(timestamp_diff/6000)/10);
   return_obj.html = new_value + "<br>" +
-                    "|@" + new_id + "|(" + new_timediff + ")<br>";
+                    "|@" + new_id + "|(" + time_moment + ")<br>";
   return_obj.label = new_value;
   return return_obj;
 }

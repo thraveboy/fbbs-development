@@ -105,6 +105,8 @@ function updateDash(addCommandToUrl = false ) {
 function retrieveBoard(boardName) {
   document.getElementById("command").value = boardName;
   document.getElementById("pagenum").value = 0;
+  nextPageElement = document.getElementById("next_page");
+  nextPageElement.style.visibility = "hidden";
   updateDash(true);
 }
 

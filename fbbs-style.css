@@ -7,6 +7,8 @@ body, input, button {
 
 button {
     font-size: 1em;
+    padding: 10px 24px;
+    border-radius: 8px;
 }
 
 input {

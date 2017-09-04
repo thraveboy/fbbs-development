@@ -1,4 +1,4 @@
-<canvas id="dashChart"></canvas>
+<canvas id="dashChart" width="1280" height="480"></canvas>
 
 <FORM NAME="form1" METHOD="POST" id="form1" hidden>
 <?php

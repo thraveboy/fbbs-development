@@ -340,7 +340,9 @@ function processDataDraw( input_json ) {
      graph_y_first_last_diff = graph_y_last_value - graph_y_first_value;
      if (graph_y_first_value != 0) {
        graph_y_percentage_diff = (graph_y_first_last_diff /
-                                 graph_y_first_value) * 100;
+                                 graph_y_first_value) * 1000000;
+       graph_y_percentage_diff = Math.trunc(graph_y_percentage_diff);
+       graph_y_percentage_diff /= 10000;
      }
    }
 

@@ -1,0 +1,1 @@
+ curl https://www.worldcoinindex.com/apiservice/json?key=PdEUH2ZNFMW4kaxKO1gGoFHJS

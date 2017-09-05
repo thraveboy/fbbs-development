@@ -1,5 +1,5 @@
 <?php
 
-  $available_commands = ["board", "ticker", "logout"];
+  $available_commands = ["board", "ticker", "trade-volume", "logout"];
 ?>
 

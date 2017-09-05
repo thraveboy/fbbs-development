@@ -3,7 +3,7 @@ import string
 import time
 import sys
 
-currencies = ['BTC', 'BCC', 'ETH', 'STRAT', 'XMR', 'OMG', 'LTH', 'GNT', 'WAVES', 'QTUM', 'PIVX', 'SC', 'NEO', 'LTC', 'DASH', 'PAY', 'GBYTE', 'FCT', 'ETC', 'XVG']]     
+currencies = ['BTC', 'BCC', 'ETH', 'STRAT', 'XMR', 'OMG', 'LTH', 'GNT', 'WAVES', 'QTUM', 'PIVX', 'SC', 'NEO', 'LTC', 'DASH', 'PAY', 'GBYTE', 'FCT', 'ETC', 'XVG']     
 update_rate_mins = 5
 if (len(sys.argv) > 1):
   update_rate_mins = int(float(sys.argv[1]))
